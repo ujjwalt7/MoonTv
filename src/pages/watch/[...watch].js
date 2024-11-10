@@ -13,7 +13,14 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useState } from "react";
 import Image from "next/image";
 import ImageWithFallback from "@/components/ImageFallback";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Link from "next/link";
 export const getServerSideProps = async (context) => {
   try {
     const mediatype = context.query.watch[0] || "movie";
@@ -32,11 +39,18 @@ export const getServerSideProps = async (context) => {
 function WatchPage({ data }) {
   const [capi, setCarouselApi] = useState();
   const router = useRouter();
+  const getDefSeason = router.query?.watch?.[2] || 1;
   const mediatype = router.query.watch[0];
-  const season = router.query?.watch?.[2] || 1;
+  const [season,setSeason] = useState(router.query?.watch?.[2] || 1);
   const episode = router.query?.watch?.[3] || 1;
   const id = router.query.watch[1];
   const bgImgBlur = data?.results?.backdrop_path;
+
+  const onSeasonValueChange = (no) => {
+    setSeason(no)
+  }
+
+
   return (
     <div className="w-full grid grid-cols-7 h-full  gap-2">
       <div className="w-full h-full col-span-5 bg-bgDark  overflow-hidden rounded-2xl">
@@ -64,7 +78,7 @@ function WatchPage({ data }) {
               <div className="w-full aspect-video rounded-2xl overflow-hidden bg-bgDark/30">
                 <iframe
                   src={`https://embed.su/embed/${mediatype}/${id}${
-                    mediatype == "tv" ? `/${season}/${episode}` : ""
+                    mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
                   }`}
                   className="w-full h-full"
                   allowFullScreen
@@ -185,7 +199,7 @@ function WatchPage({ data }) {
       </div>
       <div className="w-full  h-full col-span-2 noscb overflow-y-auto bg-bgDark rounded-2xl">
         <div className="w-full px-4 py-4 flex flex-col gap-4 ">
-        <div className="w-full flex items-center px-2 justify-start">
+          <div className="w-full flex items-center px-2 justify-start">
             <div className=" flex items-center font-medium text-textSec text-[1rem]">
               {data?.results?.title ||
                 data?.results?.original_title ||
@@ -194,15 +208,59 @@ function WatchPage({ data }) {
                 "Title"}
             </div>
           </div>
-          {/* <div className="w-full h-[50vh] rounded-2xl  overflow-y-auto noscb flex flex-col">
-            <div className="w-full items-center flex justify-between">
-              <div className="text-xl"></div>
+          {mediatype == "tv" && (
+            <div className="w-full flex flex-col gap-2">
+              <div className="w-full ">
+                <Select onValueChange={(e)=>{
+                  setSeason(e)
+                }}
+                  defaultValue={season.toString()}
+                >
+                  <SelectTrigger className="w-full border-none bg-bgDark2 text-textWhite">
+                    <SelectValue placeholder="Theme" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-bgDark2/50 backdrop-blur-xl text-textWhite outline-none border-none ">
+                    {data?.results?.seasons.map((e, i) => (
+                      <Link className="w-full" 
+                        key={"seasonSelect" + i}
+                      href={`/watch/${mediatype}/${id}/${e?.season_number}`}>
+                      <SelectItem
+                      value={e?.season_number.toString()}
+                      >
+                        {e?.name}
+                      </SelectItem>
+                        </Link>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full max-h-[50vh] rounded-2xl  overflow-y-auto noscb flex flex-col">
+                <div className="w-full h-full grid grid-cols-2 gap-1">
+                  {data?.results?.seasonInfo?.find(e=>e?.season_number==season)?.episodes?.map((e, i) => (
+                    <Link href={`/watch/${mediatype}/${id}/${season}/${e?.episode_number}`}
+                      key={"season" + i}
+                      className="overflow-hidden w-full rounded-xl aspect-video bg-bgDark3 relative"
+                    >
+                      <div className="absolute bottom-0 right-0 px-2 py-1 bg-black/70 rounded-tl-xl text-textWhite text-sm font-medium ">
+                        Ep {e?.episode_number}
+                      </div>
+                      <ImageWithFallback
+                        width="300" key={e?.still_path}
+                        className="w-full h-full object-cover"
+                        height="300"
+                        src={tmdbBasicImg + "/w300/" + e?.still_path}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div className="w-full px-4 py-2">
+
+              <div className=" w-full h-[3px] rounded-full bg-bgDark3"></div>
+              </div>
             </div>
-            <div className="w-full h-full grid grid-cols-2 gap-1">
-              <div className="w-full rounded-xl aspect-video bg-bgDark3"></div>
-            </div>
-          </div> */}
-        
+          )}
+
           <div className="w-full flex gap-6">
             <div className="w-[50%] aspect-[3/4] rounded-xl overflow-hidden">
               <ImageWithFallback

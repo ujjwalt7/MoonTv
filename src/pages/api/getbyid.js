@@ -8,32 +8,53 @@ export default async function handler(req, res) {
     },
   };
 
-  const data = await fetch(
-    `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}?language=en-US`,
-    options
-  )
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const data = await fetch(
+      `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}?language=en-US`,
+      options
+    ).then((res) => res.json());
 
-  const cast = await fetch(
-    `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}/credits?language=en-US`,
-    options
-  )
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
-  const videos = await fetch(
-    `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}/videos?language=en-US`,
-    options
-  )
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
-  const recommended = await fetch(
-    `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}/recommendations?language=en-US`,
-    options
-  )
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
-  res
-    .status(200)
-    .json({ results: { ...data, cast: cast?.cast, videos: videos?.results ,recommended:recommended?.results} });
+    const cast = await fetch(
+      `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}/credits?language=en-US`,
+      options
+    ).then((res) => res.json());
+
+    const videos = await fetch(
+      `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}/videos?language=en-US`,
+      options
+    ).then((res) => res.json());
+
+    const recommended = await fetch(
+      `https://api.themoviedb.org/3/${req.query?.type}/${req.query?.id}/recommendations?language=en-US`,
+      options
+    ).then((res) => res.json());
+
+    let seasonInfo = null;
+    if (req.query?.type === "tv" && data?.seasons) {
+      // Fetch season information
+      seasonInfo = await Promise.all(
+        data.seasons.map((e) =>
+          fetch(
+            `https://api.themoviedb.org/3/tv/${req.query?.id}/season/${e?.season_number}?language=en-US`,
+            options
+          )
+            .then((res) => res.json())
+            .catch((err) => console.error(err))
+        )
+      );
+    }
+
+    res.status(200).json({
+      results: {
+        ...data,
+        cast: cast?.cast,
+        videos: videos?.results,
+        recommended: recommended?.results,
+        seasonInfo: seasonInfo,
+      },
+    });
+  } catch (err) {
+    console.error("Fetch error:", err);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
 }
