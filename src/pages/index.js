@@ -6,27 +6,35 @@ import { tmdbBasicImg } from "@/components/values";
 import Image from "next/image";
 import { useState } from "react";
 export const getStaticProps = async (context) => {
-  const carouselres = await fetch("http://localhost:3000/api/trending");
-  const carouseldata = await carouselres.json();
-
-  const trendingmovieres = await fetch(
-    "http://localhost:3000/api/gettrend?type=movie"
-  );
-  const trendingmoviedata = await trendingmovieres.json();
-
-  const trendingtvres = await fetch(
-    "http://localhost:3000/api/gettrend?type=tv"
-  );
-  const trendingtvdata = await trendingtvres.json();
-
-  const airingTodayShows = await fetch(
-    "http://localhost:3000/api/airingtoday?type=movie"
-  );
-  const airingShowsData = await airingTodayShows.json();
-  return {
-    props: { carouseldata, trendingmoviedata, trendingtvdata, airingShowsData },
-  };
-};
+  try {
+    const carouselres = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/trending`
+    );
+    const carouseldata = await carouselres.json();
+  
+    const trendingmovieres = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/gettrend?type=movie`
+    );
+    const trendingmoviedata = await trendingmovieres.json();
+  
+    const trendingtvres = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/gettrend?type=tv`
+    );
+    const trendingtvdata = await trendingtvres.json();
+  
+    const airingTodayShows = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/airingtoday?type=movie`
+    );
+    const airingShowsData = await airingTodayShows.json();
+    return {
+      props: { carouseldata, trendingmoviedata, trendingtvdata, airingShowsData },
+    }
+  }
+  catch(error) {
+    console.error("Fetch error:", error);
+    return { props: { carouseldata:null, trendingmoviedata:null, trendingtvdata:null, airingShowsData:null }, }; // Fallback in case of error
+  }
+}
 
 export default function Home({
   carouseldata,
@@ -57,7 +65,10 @@ export default function Home({
         <div className="w-full h-full absolute top-0 left-0 z-[0] rounded-2xl overflow-hidden">
           {/* <img src={bgBlur} className="w-full h-[70vh] bg-pink-50 blur-3xl transition-all duration-300 ease-in-out"/> */}
           {bgBlur ? (
-            <Image alt="Bg" width="300" height="300"
+            <Image
+              alt="Bg"
+              width="300"
+              height="300"
               src={bgBlur}
               className={`w-full h-[70vh] bg-bgDark3 blur-2xl transition-opacity duration-500 ${
                 isTransitioning ? "opacity-0" : "opacity-100"

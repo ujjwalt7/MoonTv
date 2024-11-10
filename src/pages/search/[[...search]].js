@@ -12,15 +12,23 @@ import { IoSearch } from "react-icons/io5";
 export const getServerSideProps = async (context) => {
   // const mediatype = context.query.explore[0] || "movie";
   // const pageno = context.query.explore[1] || "1";
-  const trendingmovieres = await fetch(
-    `http://localhost:3000/api/search?query=${context.query?.search?.[0]||""}&page=${context.query?.search?.[1]||1}`
-  );
-  const tempData = await trendingmovieres.json();
-
-  // const moviesres = 
-
-
-  return { props: { tempData } };
+  try{
+    const trendingmovieres = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/search?query=${context.query?.search?.[0]||""}&page=${context.query?.search?.[1]||1}`
+    );
+    const tempData = await trendingmovieres.json();
+  
+    // const moviesres = 
+  
+  
+    return { props: { tempData } };
+  
+  
+  }
+  catch (error) {
+    console.error("Fetch error:", error);
+    return { props: { tempData: null } }; // Fallback in case of error
+  }
 };
 
 function SearchPage({tempData}) {

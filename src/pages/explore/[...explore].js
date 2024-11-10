@@ -9,13 +9,16 @@ import { useState } from "react";
 import CardofCarouselMainCard from "@/components/Main/Cards/CardofCarouselMainCard";
 import Link from "next/link";
 export const getServerSideProps = async (context) => {
-  const mediatype = context.query.explore[0] || "movie";
+  try{const mediatype = context.query.explore[0] || "movie";
   const pageno = context.query.explore[1] || "1";
   const trendingmovieres = await fetch(
-    `http://localhost:3000/api/popular?type=${mediatype}&page=${pageno}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/popular?type=${mediatype}&page=${pageno}`
   );
   const trendingmoviedata = await trendingmovieres.json();
-  return { props: { trendingmoviedata } };
+  return { props: { trendingmoviedata } };}catch (error) {
+    console.error("Fetch error:", error);
+    return { props: { trendingmoviedata: null } }; // Fallback in case of error
+  }
 };
 
 function ExplorePage({ trendingmoviedata }) {

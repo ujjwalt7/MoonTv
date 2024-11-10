@@ -14,13 +14,18 @@ import { useState } from "react";
 import Image from "next/image";
 
 export const getServerSideProps = async (context) => {
+try {
   const mediatype = context.query.watch[0] || "movie";
   const id = context.query.watch[1];
   const datares = await fetch(
-    `http://localhost:3000/api/getbyid?type=${mediatype}&id=${id}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/getbyid?type=${mediatype}&id=${id}`
   );
   const data = await datares.json();
   return { props: { data } };
+}catch (error) {
+  console.error("Fetch error:", error);
+  return { props: { data: null } }; // Fallback in case of error
+}
 };
 
 function WatchPage({ data }) {

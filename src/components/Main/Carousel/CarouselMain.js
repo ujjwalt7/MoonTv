@@ -10,14 +10,17 @@ import { tmdbBasicImg } from "@/components/values";
 import { useEffect, useState } from "react";
 import CarouselCard from "./CarouselCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCallback } from "react";
 function CarouselMain({ data, setBgIndex }) {
   const [api, setApi] = useState();
-  const onSlideMove = (s) => {
-    setBgIndex(s.slidesInView()[0]);
-  };
+  const onSlideMove = useCallback(
+    (s) => {
+      setBgIndex(s.slidesInView()[0]);
+    },[setBgIndex]
+  );
   useEffect(() => {
     if (api) api.on("slidesInView", onSlideMove);
-  }, [api]);
+  }, [api,onSlideMove]);
 
   return (
     <Carousel
