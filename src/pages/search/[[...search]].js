@@ -1,6 +1,8 @@
+import ImageWithFallback from "@/components/ImageFallback";
 import CardofCarouselMainCard from "@/components/Main/Cards/CardofCarouselMainCard";
 import TopNav from "@/components/topNav";
 import { tmdbBasicImg } from "@/components/values";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -59,7 +61,7 @@ router.replace(`/search/${val}`)
           src={tmdbBasicImg + "w300/" + bgImgBlur}
           className="w-full h-[70vh] bg-bgDark3 transition-all duration-500 blur-3xl transition-all duration-700 ease-in-out "
         /> */}
-        <img
+        <ImageWithFallback alt="Backdrop" width="300" height="500"
           src={`${tmdbBasicImg}w300/${bgImgBlur}`}
           className={`w-full h-[70vh] bg-bgDark3 blur-xl transition-opacity duration-500 ${
             isTransitioning ? "opacity-0" : "opacity-100"

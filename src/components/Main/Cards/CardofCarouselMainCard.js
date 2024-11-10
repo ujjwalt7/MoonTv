@@ -7,6 +7,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";import { useEffect, useState } from "react";
+import Image from "next/image";
+import ImageWithFallback from "@/components/ImageFallback";
 function CardofCarouselMainCard({ data, hoverFn, mediatype = "movie" }) {  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ function CardofCarouselMainCard({ data, hoverFn, mediatype = "movie" }) {  const
       {mounted && (<HoverCard>
         <HoverCardTrigger>
           <div className="w-full h-full z-[3] overflow-hidden rounded-2xl group-hover:scale-[1.02] transition-all duration-200 ease-linear">
-            <img
+            <ImageWithFallback width="500" height="500"
               src={tmdbBasicImg + "w500/" + data?.poster_path}
               alt=""
               className="w-full h-full object-cover"

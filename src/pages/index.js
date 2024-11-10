@@ -1,3 +1,4 @@
+import ImageWithFallback from "@/components/ImageFallback";
 import CardContainerMain from "@/components/Main/Cards/CardContainerMain";
 import CarouselMain from "@/components/Main/Carousel/CarouselMain";
 import TopNav from "@/components/topNav";
@@ -65,7 +66,7 @@ export default function Home({
         <div className="w-full h-full absolute top-0 left-0 z-[0] rounded-2xl overflow-hidden">
           {/* <img src={bgBlur} className="w-full h-[70vh] bg-pink-50 blur-3xl transition-all duration-300 ease-in-out"/> */}
           {bgBlur ? (
-            <Image
+            <ImageWithFallback
               alt="Bg"
               width="300"
               height="300"

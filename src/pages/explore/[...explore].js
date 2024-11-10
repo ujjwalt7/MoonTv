@@ -8,6 +8,8 @@ import { IoSearch } from "react-icons/io5";
 import { useState } from "react";
 import CardofCarouselMainCard from "@/components/Main/Cards/CardofCarouselMainCard";
 import Link from "next/link";
+import Image from "next/image";
+import ImageWithFallback from "@/components/ImageFallback";
 export const getServerSideProps = async (context) => {
   try{const mediatype = context.query.explore[0] || "movie";
   const pageno = context.query.explore[1] || "1";
@@ -53,7 +55,7 @@ function ExplorePage({ trendingmoviedata }) {
           src={tmdbBasicImg + "w300/" + bgImgBlur}
           className="w-full h-[70vh] bg-bgDark3 transition-all duration-500 blur-3xl transition-all duration-700 ease-in-out "
         /> */}
-        <img
+        <ImageWithFallback alt="Backdrop" width="300" height="500"
           src={`${tmdbBasicImg}w300/${bgImgBlur}`}
           className={`w-full h-[70vh] bg-bgDark3 blur-2xl transition-opacity duration-500 ${
             isTransitioning ? "opacity-0" : "opacity-100"

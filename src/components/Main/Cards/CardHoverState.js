@@ -1,5 +1,7 @@
+import ImageWithFallback from "@/components/ImageFallback";
 import { tmdbBasicImg } from "@/components/values";
 import { HoverCardContent } from "@radix-ui/react-hover-card";
+import Image from "next/image";
 import { FaPlay } from "react-icons/fa6";
 import { IoIosAdd } from "react-icons/io";
 
@@ -10,11 +12,11 @@ function CardHoverState({ data }) {
     {/* <div className=""> */}
       <div className="w-full h-full flex flex-col rounded-2xl overflow-hidden">
         <div className="w-full h-full flex flex-col gap-1">
-          <div className="w-full h-[40%]">
-            <img
+          <div className="w-full h-[15vh]">
+            <ImageWithFallback width="300" height="500"
               src={tmdbBasicImg + "w780/" + data?.backdrop_path}
-              className="w-full h-full object-cover"
-              alt=""
+              className="w-full h-full object-cover "
+              alt="BackDrop"
             />
           </div>
           <div className="w-full h-full flex flex-col p-2 justify-between gap-2">

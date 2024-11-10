@@ -2,12 +2,15 @@ import { tmdbBasicImg, tmdbBasicImgOriginl } from "@/components/values";
 import { IoIosAdd } from "react-icons/io";
 import { TiStarFullOutline } from "react-icons/ti";
 import { FaPlay } from "react-icons/fa";
+import Link from "next/link";
+import Image from "next/image";
+import ImageWithFallback from "@/components/ImageFallback";
 function CarouselCard({ e }) {
   return (
     <div className="w-full">
       <div className=" w-full aspect-[10/3] rounded-3xl overflow-hidden blur-0 relative">
         <div className="w-full h-full overflow-hidden z-[2]">
-          <img
+          <ImageWithFallback width="1280" height="720"
             src={tmdbBasicImg + "w1280" + e?.backdrop_path}
             className="w-full h-full object-cover"
             alt=""
@@ -16,7 +19,7 @@ function CarouselCard({ e }) {
         <div className="w-full z-[3] absolute top-0 left-0 h-full bg-black/10 backdrop-blur-md grid grid-cols-2">
           <div className="w-full h-full flex flex-col justify-center px-10 gap-4">
             {e?.logo !=null?(<div className="w-full h-[13vh] overflow-hidden">
-              <img
+              <ImageWithFallback width="500" height="500"
                 src={tmdbBasicImg + "w500/" + e?.logo?.file_path}
                 className="object-contain overflow-hidden h-full "
                 alt=""
@@ -43,19 +46,19 @@ function CarouselCard({ e }) {
                 {e?.overview?.substring(0, 200) + "..."}
               </div>
               <div className="w-full flex items-center gap-2">
-                <div className="px-4 py-3 rounded-full text-textWhite text-sm bg-white/10 font-medium flex items-center gap-3 backdrop-blur-xl">
+                <Link href={`${"/watch/"+e?.media_type+"/"+e?.id}`} className="px-4 py-3 rounded-full text-textWhite text-sm bg-white/10 font-medium flex items-center gap-3 backdrop-blur-xl">
                   <div className="text-lg">
                     <FaPlay />
                   </div>
                   Watch Now
-                </div>
+                </Link>
                 <div className="p-2 bg-white/10 text-textWhite backdrop-blur-xl text-2xl rounded-full overflow-hidden"><IoIosAdd /></div>
               </div>
             </div>
           </div>
           <div className="w-full flex justify-center items-center overflow-hidden">
             <div className="w-1/2">
-              <img
+              <ImageWithFallback width="780" height="500"
                 src={tmdbBasicImg + "w780" + e?.poster_path}
                 className="w-full -skew-x-6"
                 alt=""
