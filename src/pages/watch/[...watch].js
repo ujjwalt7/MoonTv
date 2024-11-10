@@ -194,14 +194,14 @@ function WatchPage({ data }) {
                 "Title"}
             </div>
           </div>
-          <div className="w-full h-[50vh] rounded-2xl  overflow-y-auto noscb flex flex-col">
+          {/* <div className="w-full h-[50vh] rounded-2xl  overflow-y-auto noscb flex flex-col">
             <div className="w-full items-center flex justify-between">
               <div className="text-xl"></div>
             </div>
             <div className="w-full h-full grid grid-cols-2 gap-1">
               <div className="w-full rounded-xl aspect-video bg-bgDark3"></div>
             </div>
-          </div>
+          </div> */}
         
           <div className="w-full flex gap-6">
             <div className="w-[50%] aspect-[3/4] rounded-xl overflow-hidden">
