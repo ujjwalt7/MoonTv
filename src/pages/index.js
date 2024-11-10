@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { tmdbBasicImg } from "@/components/values";
 import Image from "next/image";
 import { useState } from "react";
-export const getStaticProps = async (context) => {
+export const getServerSideProps  = async (context) => {
   try {
     const carouselres = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/trending`
@@ -27,12 +27,12 @@ export const getStaticProps = async (context) => {
     );
     const airingShowsData = await airingTodayShows.json();
     return {
-      props: { carouseldata, trendingmoviedata, trendingtvdata, airingShowsData },
+      props: { carouseldata, trendingmoviedata, trendingtvdata, airingShowsData }
     }
   }
   catch(error) {
     console.error("Fetch error:", error);
-    return { props: { carouseldata:null, trendingmoviedata:null, trendingtvdata:null, airingShowsData:null }, }; // Fallback in case of error
+    return { props: { carouseldata:null, trendingmoviedata:null, trendingtvdata:null, airingShowsData:null } }; // Fallback in case of error
   }
 }
 
