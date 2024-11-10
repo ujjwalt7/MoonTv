@@ -30,7 +30,7 @@ function CardofCarouselMainCard({ data, hoverFn, mediatype = "movie" }) {  const
       {mounted && (<HoverCard>
         <HoverCardTrigger>
           <div className="w-full h-full z-[3] overflow-hidden rounded-2xl group-hover:scale-[1.02] transition-all duration-200 ease-linear">
-            <ImageWithFallback width="500" height="500"
+            <ImageWithFallback key={data?.poster_path} width="500" height="500"
               src={tmdbBasicImg + "w500/" + data?.poster_path}
               alt=""
               className="w-full h-full object-cover"

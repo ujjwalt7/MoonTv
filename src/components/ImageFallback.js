@@ -7,7 +7,7 @@ function ImageWithFallback(props) {
     const [imgSrc, setImgSrc] = useState(src);
 
     return (
-        <Image alt=""
+        <Image alt="" key={imgSrc}
             {...rest}
             src={imgSrc}
             onError={() => {

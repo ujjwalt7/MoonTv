@@ -35,7 +35,6 @@ function ExplorePage({ trendingmoviedata }) {
   // const OnHoverFn = (data) => {
   //   setbgImgBlur(data?.backdrop_path);
   // };
-
   const [isTransitioning, setIsTransitioning] = useState(false);
   const OnHoverFn = (data) => {
     setIsTransitioning(true); // Start transition
