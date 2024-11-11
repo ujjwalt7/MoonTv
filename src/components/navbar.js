@@ -27,7 +27,7 @@ function Navbar() {
         <div className="w-full flex flex-col gap-2">
           <NavbarPills Icon={MdOutlineWatchLater} title={"History"} />
           <NavbarPills Icon={GrFavorite} title={"WatchList"} />
-          <NavbarPills Icon={FaRegUser} title={"Login"} />
+          <NavbarPills link={'/login'} Icon={FaRegUser} title={"Login"} />
         </div>
       </div>
     </div>

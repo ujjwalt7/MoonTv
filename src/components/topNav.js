@@ -1,12 +1,17 @@
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";import { BiLogOut } from "react-icons/bi";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
+import { signOut } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 function TopNav({ title }) {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isvisible, setIsVisible] = useState(true);
+  const { toast } = useToast();
   const [bgBlur, setBgBlur] = useState(false);
+  const { user,setUser } = useUser();
   const onScroll = useCallback((event) => {
     const scval = event?.target?.scrollTop;
 
@@ -74,6 +79,28 @@ function TopNav({ title }) {
               {title}
             </div>
           )}
+        </div>
+        <div className="px-4">
+          {
+            user&&(<div onClick={async()=>{
+              const {error} = await signOut();
+              if (error) {toast({
+                title: "Error Ocurred",
+                description: `${error}`,
+                variant: "destructive",
+              });
+                
+              }
+              else {
+                toast({
+                  title: "Logged Out",
+                  description: "You Have been Logged Out Sucessfully",
+                });
+              }
+            }} className="p-2 pr-3 text-2xl text-textWhite gap-2 rounded-full bg-white/20 backdrop-blur-lg flex justify-center items-center">
+              <BiLogOut /><div className="text-sm">Logout</div>
+              </div>)
+          }
         </div>
       </div>
     </div>

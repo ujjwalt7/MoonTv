@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import CardofCarouselMainCard from "@/components/Main/Cards/CardofCarouselMainCard";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useState } from "react";
+import { useState,useRef,useEffect } from "react";
 import Image from "next/image";
 import ImageWithFallback from "@/components/ImageFallback";
 import {
@@ -46,10 +46,6 @@ function WatchPage({ data }) {
   const id = router.query.watch[1];
   const bgImgBlur = data?.results?.backdrop_path;
 
-  const onSeasonValueChange = (no) => {
-    setSeason(no)
-  }
-
 
   return (
     <div className="w-full grid grid-cols-7 h-full  gap-2">
@@ -76,7 +72,7 @@ function WatchPage({ data }) {
             />
             <div className="w-full px-8 pt-4">
               <div className="w-full aspect-video rounded-2xl overflow-hidden bg-bgDark/30">
-                <iframe
+                <iframe 
                   src={`https://embed.su/embed/${mediatype}/${id}${
                     mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
                   }`}

@@ -1,11 +1,15 @@
-import { tmdbBasicImg, tmdbBasicImgOriginl } from "@/components/values";
+import { addToWatchlistHandler, tmdbBasicImg, tmdbBasicImgOriginl } from "@/components/values";
 import { IoIosAdd } from "react-icons/io";
 import { TiStarFullOutline } from "react-icons/ti";
 import { FaPlay } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import ImageWithFallback from "@/components/ImageFallback";
+import { useUser } from "@/context/UserContext";
+import { useToast } from "@/hooks/use-toast";
 function CarouselCard({ e }) {
+  const {toast} = useToast();
+  const { user,setUser } = useUser();
   return (
     <div className="w-full">
       <div className=" w-full aspect-[10/3] rounded-3xl overflow-hidden blur-0 relative">
@@ -52,7 +56,9 @@ function CarouselCard({ e }) {
                   </div>
                   Watch Now
                 </Link>
-                <div className="p-2 bg-white/10 text-textWhite backdrop-blur-xl text-2xl rounded-full overflow-hidden"><IoIosAdd /></div>
+                <div className="p-2 cursor-pointer bg-white/10 text-textWhite backdrop-blur-xl text-2xl rounded-full overflow-hidden" onClick={()=>{
+                  addToWatchlistHandler({user,movieId: e?.id,movieType: e?.media_type,setUser,toast});
+                }}><IoIosAdd /></div>
               </div>
             </div>
           </div>

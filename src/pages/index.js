@@ -57,7 +57,7 @@ export default function Home({
           carouseldata?.["results"]?.[index || 0]?.backdrop_path
       );
       setIsTransitioning(false); // End transition after image change
-    }, 200);
+    }, 100);
   };
 
   return (
@@ -67,7 +67,7 @@ export default function Home({
           {/* <img src={bgBlur} className="w-full h-[70vh] bg-pink-50 blur-3xl transition-all duration-300 ease-in-out"/> */}
           {bgBlur ? (
             <ImageWithFallback
-              alt="Bg"
+              alt="Bg"  key={bgBlur}
               width="300"
               height="300"
               src={bgBlur}

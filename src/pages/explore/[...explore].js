@@ -54,7 +54,7 @@ function ExplorePage({ trendingmoviedata }) {
           src={tmdbBasicImg + "w300/" + bgImgBlur}
           className="w-full h-[70vh] bg-bgDark3 transition-all duration-500 blur-3xl transition-all duration-700 ease-in-out "
         /> */}
-        <ImageWithFallback alt="Backdrop" width="300" height="500"
+        <ImageWithFallback key={bgImgBlur} alt="Backdrop" width="300" height="500"
           src={`${tmdbBasicImg}w300/${bgImgBlur}`}
           className={`w-full h-[70vh] bg-bgDark3 blur-2xl transition-opacity duration-500 ${
             isTransitioning ? "opacity-0" : "opacity-100"
