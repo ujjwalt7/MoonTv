@@ -46,6 +46,8 @@ function WatchPage({ data }) {
   const id = router.query.watch[1];
   const bgImgBlur = data?.results?.backdrop_path;
 
+  const onPlayCLick = ()=>{}
+
 
   return (
     <div className="w-full grid grid-cols-7 h-full  gap-2">
@@ -77,7 +79,7 @@ function WatchPage({ data }) {
                     mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
                   }`}
                   className="w-full h-full"
-                  allowFullScreen
+                  allowFullScreen onClick={onPlayCLick}
                   frameBorder="0"
                 ></iframe>
               </div>
