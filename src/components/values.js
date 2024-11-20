@@ -77,3 +77,56 @@ export const addToWatchlistHandler = async ({
     });
   }
 };
+
+
+// Component function where this is called
+export const addToWatchHistoryHandler = async ({
+  user,
+  movieId,
+  mediaType,
+  title,
+  posterUrl,
+  setUser,
+  toast,
+}) => {
+  if (!user) {
+    console.log("User not authenticated");
+    toast({
+      title: "User Not Logged In",
+      description: "To add to Watch History Login/SignUp first!",
+      action: (
+        <ToastAction altText="Login">
+          <Link href={"/login"}>Login</Link>
+        </ToastAction>
+      ),
+    });
+    return;
+  }
+
+  // Get the current timestamp
+  const timestamp = new Date().toISOString();
+
+  // Call the addToWatchHistory function
+  const { success, error, message } = await addToWatchHistory({
+    userId: user.id,
+    movieId,
+    mediaType,
+    timestamp,
+    title,
+    posterUrl,
+    setUser,
+  });
+
+  if (success) {
+    toast({
+      title: "Watch History Updated",
+      description: message || "Added to watch history!",
+    });
+  } else {
+    toast({
+      title: "Error Updating Watch History",
+      description: `${error}`,
+      variant: "destructive",
+    });
+  }
+};

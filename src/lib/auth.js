@@ -85,6 +85,7 @@ export const addToWatchlist = async (
   timestamp,
   setUser
 ) => {
+  
   // Fetch the current user data
   const { data, error } = await supabase
     .from("users")
@@ -192,55 +193,35 @@ export const addToWatchHistory = async ({
 
   return { success: true };
 };
+export const getSignedInUserData = async () => {
+  try {
+    // Get the current session (signed-in user)
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
 
-// Component function where this is called
-export const addToWatchHistoryHandler = async ({
-  user,
-  movieId,
-  mediaType,
-  title,
-  posterUrl,
-  setUser,
-  toast,
-}) => {
-  if (!user) {
-    console.log("User not authenticated");
-    toast({
-      title: "User Not Logged In",
-      description: "To add to Watch History Login/SignUp first!",
-      action: (
-        <ToastAction altText="Login">
-          <Link href={"/login"}>Login</Link>
-        </ToastAction>
-      ),
-    });
-    return;
-  }
+    if (sessionError || !session) {
+      console.error("Error fetching session:", sessionError);
+      return { success: false, error: "User is not logged in." };
+    }
 
-  // Get the current timestamp
-  const timestamp = new Date().toISOString();
+    // Fetch user data from the `users` table based on the session user ID
+    const { data: userData, error: fetchError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("auth_user_id", session.user.id)
+      .single(); // Get only one user record
 
-  // Call the addToWatchHistory function
-  const { success, error, message } = await addToWatchHistory({
-    userId: user.id,
-    movieId,
-    mediaType,
-    timestamp,
-    title,
-    posterUrl,
-    setUser,
-  });
+    if (fetchError) {
+      console.error("Error fetching user data:", fetchError);
+      return { success: false, error: fetchError.message };
+    }
 
-  if (success) {
-    toast({
-      title: "Watch History Updated",
-      description: message || "Added to watch history!",
-    });
-  } else {
-    toast({
-      title: "Error Updating Watch History",
-      description: `${error}`,
-      variant: "destructive",
-    });
+    // Return the user data
+    return { success: true, userData };
+  } catch (error) {
+    console.error("Unexpected error fetching user data:", error);
+    return { success: false, error: error.message };
   }
 };

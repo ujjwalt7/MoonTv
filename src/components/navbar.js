@@ -56,6 +56,8 @@ function Navbar() {
             HoverIcon={GoClock}
           />
           <NavbarPills
+          
+          link={"/watchlist"}
             Icon={FaHeart}
             title={"WatchList"}
             HoverIcon={FaRegHeart}

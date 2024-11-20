@@ -10,6 +10,7 @@ function ImageWithFallback(props) {
         <img alt="" key={imgSrc}
             {...rest}
             src={imgSrc}
+            // onerror={`this.onerror=null;this.src='${fallbackSrc}'`}
             onError={() => {
                 setImgSrc(fallbackSrc);
             }}

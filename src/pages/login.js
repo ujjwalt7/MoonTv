@@ -10,6 +10,7 @@ import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import Image from "next/image";
 function LoginPage() {
   const [loginState, setloginState] = useState(true);
   const router = useRouter();
@@ -79,13 +80,23 @@ function LoginPage() {
   return (
     <div className="w-full h-full relative">
       <div className="w-full h-full overflow-hidden z-0">
-        <ImageWithFallback
+      {/* <img alt="" 
+            // src={"../assets/img/BgLogin.jpg"}
+            src={BgLogin}
+          className="w-full h-full object-cover"
+            // onerror={`this.onerror=null;this.src='${fallbackSrc}'`}
+           
+        /> */}
+        <Image width={1920} src={BgLogin} alt="Bg"
+          className="w-full h-full object-cover" height={1080}/>
+        {/* <ImageWithFallback
+        
           src={BgLogin}
           width="1920"
           height="1080"
           alt="Backdrop"
           className="w-full h-full object-cover"
-        />
+        /> */}
       </div>
       <form onSubmit={onSubmit}>
         <div className="w-full h-full absolute top-0 left-0 z-[1] flex justify-center items-center">

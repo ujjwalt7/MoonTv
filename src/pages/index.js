@@ -41,7 +41,7 @@ export default function Home({
   carouseldata,
   trendingmoviedata,
   trendingtvdata,
-  airingShowsData,
+  airingShowsData
 }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [bgBlur, setBgBlur] = useState(
@@ -61,7 +61,7 @@ export default function Home({
   };
 
   return (
-    <div className="w-full h-screen noscb overflow-y-auto bg-bgDark">
+    <div className="w-full h-screen noscb overflow-y-auto overflow-x-hidden bg-bgDark">
       <div className="w-full relative rounded-2xl">
         <div className="w-full h-full absolute top-0 left-0 z-[0] rounded-2xl overflow-hidden">
           {/* <img src={bgBlur} className="w-full h-[70vh] bg-pink-50 blur-3xl transition-all duration-300 ease-in-out"/> */}

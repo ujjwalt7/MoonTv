@@ -46,7 +46,7 @@ function CardContainerMain({ data ,title = "Trending Movies" }) {
             {data?.results ? data?.results?.results?.map((e, i) => (
               <CarouselItem
                 key={"CarouselCardMain" + i}
-                className="basis-60 pl-3 "
+                className="basis-52 pl-3 "
               >
                 <CardofCarouselMainCard data={e}/>
               </CarouselItem>
@@ -54,7 +54,7 @@ function CardContainerMain({ data ,title = "Trending Movies" }) {
               Array.apply(null, Array(10)).map((e,i)=>(
                 <CarouselItem
                 key={"CarouselCardMain" + i}
-                className="basis-60 pl-3 "
+                className="basis-52 pl-3 "
               >
                 <Skeleton className="w-full bg-bgDark2 aspect-[3/4] rounded-2xl"/>
               </CarouselItem>

@@ -6,15 +6,23 @@ import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { signOut } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { Router, useRouter } from "next/router";
+import { SidebarTrigger } from "./ui/sidebar";
+import { FaUserAstronaut } from "react-icons/fa";
 function TopNav({ title }) {
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [isvisible, setIsVisible] = useState(true);
   const { toast } = useToast();
+  // if(!openLogin) toast({
+  //   title: "Component Error",
+  //   description: "Login Sheet Opener Missing",
+  // });
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  const [isvisible, setIsVisible] = useState(true);
   const [bgBlur, setBgBlur] = useState(false);
   const { user,setUser } = useUser();
+  const router = useRouter()
   const onScroll = useCallback((event) => {
     const scval = event?.target?.scrollTop;
-
     if (lastScrollY > scval) {
       setIsVisible(false);
     } else {
@@ -45,7 +53,7 @@ function TopNav({ title }) {
 
   return (
     <div
-      className={`w-full sticky p-2 z-[100] ${
+      className={`w-full sticky p-2 z-[5] ${
         bgBlur ? "backdrop-blur-md bg-black/30" : "backdrop-blur-0"
       } ${
         isvisible ? "top-[-100%]" : "top-0"
@@ -54,6 +62,10 @@ function TopNav({ title }) {
       <div className="w-full flex justify-between py-2 px-4">
         <div className="w-full flex items-center gap-4">
           <div className="flex items-center gap-2">
+
+            {/* <div className="p-2 rounded-full text-xl bg-white/10 backdrop-blur-lg text-textWhite"> */}
+              <SidebarTrigger className=" text-textWhite rounded-full"/>
+            {/* </div> */}
             <div className="p-2 rounded-full text-xl bg-white/10 backdrop-blur-lg text-textWhite">
               <IoIosArrowBack />
             </div>
@@ -81,26 +93,36 @@ function TopNav({ title }) {
           )}
         </div>
         <div className="px-4">
-          {
-            user&&(<div onClick={async()=>{
+          <div onClick={async()=>{
+            if(user){
+
               const {error} = await signOut();
               if (error) {toast({
                 title: "Error Ocurred",
                 description: `${error}`,
                 variant: "destructive",
               });
-                
-              }
-              else {
-                toast({
-                  title: "Logged Out",
-                  description: "You Have been Logged Out Sucessfully",
-                });
-              }
-            }} className="p-2 pr-3 text-2xl text-textWhite gap-2 rounded-full bg-white/20 backdrop-blur-lg flex justify-center items-center">
-              <BiLogOut /><div className="text-sm">Logout</div>
-              </div>)
+              
+            }
+            else {
+              toast({
+                title: "Logged Out",
+                description: "You Have been Logged Out Sucessfully",
+              });
+            }
           }
+          else{
+            // if(openLogin) openLogin(true)
+             toast({
+                title: "Redirecting to Login",
+                description: "Please wait while we redirect to new Page and login",
+                // variant: "destructive",
+              });
+              router.push('/login')
+          }
+            }} className="p-2 pr-3 text-2xl text-textWhite gap-2 rounded-full bg-white/20 backdrop-blur-lg flex justify-center items-center">
+              {user?<BiLogOut />:<FaUserAstronaut className="text-2xl p-1 pr-0" />}{user?<div className="text-sm">Logout</div>:<div className="text-sm">Login</div>}
+              </div>
         </div>
       </div>
     </div>

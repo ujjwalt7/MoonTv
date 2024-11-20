@@ -61,8 +61,8 @@ function ExplorePage({ trendingmoviedata }) {
           }`}
         />
       </div>
-      <div className="w-full min-h-[200vh] flex flex-col gap-4 blur-0" id="scroll">
-        <TopNav title={`Explore ${router.query.explore[0]}`} />
+      <div className="w-full flex flex-col gap-4 blur-0" id="scroll">
+        <TopNav  title={`Explore ${router.query.explore[0]}`} />
         <div className="w-full px-4 flex gap-2 items-center">
           <div className="w-full gap-4 flex bg-black/30 backdrop-blur-md rounded-lg px-4 py-3">
             <div className="text-2xl text-textWhite">

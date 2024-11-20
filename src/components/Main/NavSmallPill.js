@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SidebarMenuButton } from "../ui/sidebar";
 
-function NavbarPills({ Icon, title, link, HoverIcon }) {
+function NavbarSmallPills({ Icon, link, HoverIcon }) {
   // return (
   //   <Link
   //     href={link || "/"}
@@ -19,16 +19,15 @@ function NavbarPills({ Icon, title, link, HoverIcon }) {
   //   </Link>
   // );
   return (
-    <SidebarMenuButton asChild className="w-full hover:bg-bgDark">
-      <Link href={link} className="group/navpill gap-3 flex">
-        <div className="relative text-2xl">
+    <div asChild className="w-full hover:bg-bgDark flex justify-center py-1">
+      <Link href={link} className="group/navpill relative text-[1.7rem] ">
+        {/* <div className=""> */}
           <Icon className="opacity-100 group-hover/navpill:opacity-0" />
           <HoverIcon className="opacity-0 absolute top-0 left-0 group-hover/navpill:opacity-100" />
-        </div>
-        <span className="text-sm">{title}</span>
+        {/* </div> */}
       </Link>
-    </SidebarMenuButton>
+    </div>
   );
 }
 
-export default NavbarPills;
+export default NavbarSmallPills;

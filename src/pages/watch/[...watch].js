@@ -1,6 +1,10 @@
 import TopNav from "@/components/topNav";
 import { IoAddCircleOutline } from "react-icons/io5";
-import { tags, tmdbBasicImg } from "@/components/values";
+import {
+  addToWatchHistoryHandler,
+  tags,
+  tmdbBasicImg,
+} from "@/components/values";
 import { GrFavorite } from "react-icons/gr";
 import { useRouter } from "next/router";
 import {
@@ -10,7 +14,7 @@ import {
 } from "@/components/ui/carousel";
 import CardofCarouselMainCard from "@/components/Main/Cards/CardofCarouselMainCard";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useState,useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import ImageWithFallback from "@/components/ImageFallback";
 import {
@@ -21,6 +25,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
+import { useToast } from "@/hooks/use-toast";
+import { InfoSideBar } from "@/components/Main/InfoSideBar";
 export const getServerSideProps = async (context) => {
   try {
     const mediatype = context.query.watch[0] || "movie";
@@ -41,18 +48,27 @@ function WatchPage({ data }) {
   const router = useRouter();
   const getDefSeason = router.query?.watch?.[2] || 1;
   const mediatype = router.query.watch[0];
-  const [season,setSeason] = useState(router.query?.watch?.[2] || 1);
+  const [season, setSeason] = useState(router.query?.watch?.[2] || 1);
   const episode = router.query?.watch?.[3] || 1;
   const id = router.query.watch[1];
   const bgImgBlur = data?.results?.backdrop_path;
 
-  const onPlayCLick = ()=>{}
-
+  const { toast } = useToast();
+  const { user, setUser } = useUser();
+  const [showInfo, setshowInfo] = useState(true);
 
   return (
-    <div className="w-full grid grid-cols-7 h-full  gap-2">
-      <div className="w-full h-full col-span-5 bg-bgDark  overflow-hidden rounded-2xl">
-        <div className="w-full h-full relative overflow-y-auto noscb">
+    <div className="w-full flex h-full  gap-2 overflow-x-hidden">
+      {/* <div className="w-full flex h-full  gap-2"> */}
+      <div className="w-full h-full relative  bg-bgDark overflow-x-hidden  overflow-hidden rounded-2xl transition-all duration-500">
+        {!showInfo&&<div
+          onClick={() => setshowInfo(true)}
+          className="w-[2%] text-4xl opacity-0 hover:opacity-100 flex justify-center items-center hover:w-[5%] transition-all duration-300 z-[5] bg-gradient-to-r hover:from-bgDark/20 hover:to-bg h-full fixed right-0 top-0"
+        >
+          <IoIosArrowForward />
+        </div>}
+
+        <div className="w-full h-full relative overflow-y-auto overflow-x-hidden noscb">
           <div className="w-full h-[100%] absolute top-0 left-0 z-[0] rounded-2xl overflow-hidden">
             <ImageWithFallback
               alt="Poster"
@@ -74,12 +90,22 @@ function WatchPage({ data }) {
             />
             <div className="w-full px-8 pt-4">
               <div className="w-full aspect-video rounded-2xl overflow-hidden bg-bgDark/30">
-                <iframe 
+                <iframe
                   src={`https://embed.su/embed/${mediatype}/${id}${
                     mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
                   }`}
                   className="w-full h-full"
-                  allowFullScreen onClick={onPlayCLick}
+                  allowFullScreen
+                  onClick={() => {
+                    console.log("Played");
+                    addToWatchHistoryHandler({
+                      user,
+                      movieId: data?.results?.id,
+                      mediaType: data?.results?.media_type,
+                      setUser,
+                      toast,
+                    });
+                  }}
                   frameBorder="0"
                 ></iframe>
               </div>
@@ -195,145 +221,15 @@ function WatchPage({ data }) {
           </div>
         </div>
       </div>
-      <div className="w-full  h-full col-span-2 noscb overflow-y-auto bg-bgDark rounded-2xl">
-        <div className="w-full px-4 py-4 flex flex-col gap-4 ">
-          <div className="w-full flex items-center px-2 justify-start">
-            <div className=" flex items-center font-medium text-textSec text-[1rem]">
-              {data?.results?.title ||
-                data?.results?.original_title ||
-                data?.results?.name ||
-                data?.results?.original_name ||
-                "Title"}
-            </div>
-          </div>
-          {mediatype == "tv" && (
-            <div className="w-full flex flex-col gap-2">
-              <div className="w-full ">
-                <Select onValueChange={(e)=>{
-                  setSeason(e)
-                }}
-                  defaultValue={season.toString()}
-                >
-                  <SelectTrigger className="w-full border-none bg-bgDark2 text-textWhite">
-                    <SelectValue placeholder="Theme" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-bgDark2/50 backdrop-blur-xl text-textWhite outline-none border-none ">
-                    {data?.results?.seasons.map((e, i) => (
-                      <Link className="w-full" 
-                        key={"seasonSelect" + i}
-                      href={`/watch/${mediatype}/${id}/${e?.season_number}`}>
-                      <SelectItem
-                      value={e?.season_number.toString()}
-                      >
-                        {e?.name}
-                      </SelectItem>
-                        </Link>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-full max-h-[50vh] rounded-2xl  overflow-y-auto noscb flex flex-col">
-                <div className="w-full h-full grid grid-cols-2 gap-1">
-                  {data?.results?.seasonInfo?.find(e=>e?.season_number==season)?.episodes?.map((e, i) => (
-                    <Link href={`/watch/${mediatype}/${id}/${season}/${e?.episode_number}`}
-                      key={"season" + i}
-                      className="overflow-hidden w-full rounded-xl aspect-video bg-bgDark3 relative"
-                    >
-                      <div className="absolute bottom-0 right-0 px-2 py-1 bg-black/70 rounded-tl-xl text-textWhite text-sm font-medium ">
-                        Ep {e?.episode_number}
-                      </div>
-                      <ImageWithFallback
-                        width="300" key={e?.still_path}
-                        className="w-full h-full object-cover"
-                        height="300"
-                        src={tmdbBasicImg + "/w300/" + e?.still_path}
-                      />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div className="w-full px-4 py-2">
 
-              <div className=" w-full h-[3px] rounded-full bg-bgDark3"></div>
-              </div>
-            </div>
-          )}
-
-          <div className="w-full flex gap-6">
-            <div className="w-[50%] aspect-[3/4] rounded-xl overflow-hidden">
-              <ImageWithFallback
-                width="780"
-                height="500"
-                // alt="backdrop"
-                src={tmdbBasicImg + "w780" + data?.results?.poster_path}
-                alt="Poster"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex flex-col h-full text-textWhite text-[1rem] gap-2 justify-center">
-              <div className="flex flex-col ">
-                <div className="text-textSec">Status:</div>
-                <div className="">{data?.results?.status}</div>
-              </div>
-              <div className="flex flex-col ">
-                <div className="text-textSec">Production:</div>
-                <div className="">
-                  {data?.results?.production_companies?.[0]?.name}
-                </div>
-              </div>
-              <div className="flex flex-col ">
-                <div className="text-textSec">Aired:</div>
-                <div className="">{data?.results?.release_date}</div>
-              </div>
-            </div>
-          </div>
-          <div className="w-full flex flex-col gap-2">
-            <div className="w-full text-2xl text-white font-medium">
-              {data?.results?.title ||
-                data?.results?.original_title ||
-                data?.results?.name ||
-                data?.results?.original_name ||
-                "Title"}
-            </div>
-            <div className="w-full p-3 text-sm bg-bgDark2 rounded-xl text-textSec font-medium">
-              {data?.results?.overview}
-            </div>
-            <div className="w-full flex gap-2 items-center flex-wrap ">
-              {data?.results?.genres?.map((e, i) => (
-                <div
-                  className="text-sm px-3 h-fit py-2 w-fit rounded-lg bg-bgDark3 text-textSec whitespace-nowrap"
-                  key={i + "genre"}
-                >
-                  {e?.name}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="text-xl text-textWhite">Characters</div>
-          <div className="w-full max-h-[40vh] overflow-y-auto noscb grid grid-cols-1 gap-2 rounded-xl">
-            {data?.results?.cast?.map((e, i) => (
-              <div
-                key={"Charatcer" + e?.id + "_" + i}
-                className="w-full h-fit px-4 py-3 bg-bgDark2/40 rounded-xl flex gap-4 items-center text-textSec "
-              >
-                <div className="w-12 aspect-square rounded-full bg-bgDark3 overflow-hidden">
-                  <ImageWithFallback
-                    width="45"
-                    height="45"
-                    src={tmdbBasicImg + "/w45/" + e?.profile_path}
-                    className="w-full h-full object-cover"
-                    alt=""
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <div className="text-[1rem] font-medium">{e?.name}</div>
-                  <div className="text-sm">{e?.character}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <InfoSideBar
+        data={data}
+        showInfo={showInfo}
+        setshowInfo={setshowInfo}
+        mediatype={mediatype}
+        season={season}
+        id={id}
+      />
     </div>
   );
 }
