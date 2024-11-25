@@ -41,7 +41,7 @@ export function InfoSideBar({data,mediatype,season,id ,showInfo,setshowInfo,setS
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="bg-bgDark2/50 backdrop-blur-xl text-textWhite outline-none border-none ">
-                    {data?.results?.seasons.map((e, i) => (
+                    {data?.results?.seasons?.map((e, i) => (
                       <Link className="w-full" 
                         key={"seasonSelect" + i}
                       href={`/watch/${mediatype}/${id}/${e?.season_number}`}>
@@ -60,9 +60,12 @@ export function InfoSideBar({data,mediatype,season,id ,showInfo,setshowInfo,setS
                   {data?.results?.seasonInfo?.find(e=>e?.season_number==season)?.episodes?.map((e, i) => (
                     <Link href={`/watch/${mediatype}/${id}/${season}/${e?.episode_number}`}
                       key={"season" + i}
-                      className="overflow-hidden w-full rounded-xl aspect-video bg-bgDark3 relative"
+                      className="overflow-hidden w-full rounded-xl aspect-video bg-bgDark3 relative group"
                     >
-                      <div className="absolute bottom-0 right-0 px-2 py-1 bg-black/70 rounded-tl-xl text-textWhite text-sm font-medium ">
+                      <div className="w-full h-full from-black/10  via-black/60 to-black/90 text-textSec text-xs flex justify-start transition-all duration-200 items-end text-wrap p-2 group-hover:opacity-100 opacity-0 bg-gradient-to-b absolute top-0 left-0 z-[3] rounded-xl">{
+                        e?.name
+                      }</div>
+                      <div className="absolute bottom-0 right-0 px-2 py-1 bg-black/70 rounded-tl-xl text-textWhite text-sm font-medium  transition-all duration-200 opacity-100 group-hover:opacity-0">
                         Ep {e?.episode_number}
                       </div>
                       <ImageWithFallback
