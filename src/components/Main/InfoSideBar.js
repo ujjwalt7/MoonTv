@@ -13,7 +13,7 @@ import { IoClose } from "react-icons/io5";
 
 
 
-export function InfoSideBar({data,mediatype,season,id ,showInfo,setshowInfo}) {
+export function InfoSideBar({data,mediatype,season,id ,showInfo,setshowInfo,setSeason}) {
   return (
     <div className={` h-full col-span-2 noscb overflow-y-auto bg-bgDark rounded-2xl relative ${showInfo?'right-0 w-2/5':"right-[-100%] w-0"} transition-[left] duration-300`}>
         <div className="w-full px-4 py-4 pt-0 flex flex-col gap-4 ">

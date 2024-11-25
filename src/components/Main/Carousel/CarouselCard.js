@@ -20,7 +20,7 @@ function CarouselCard({ e }) {
             alt=""
           />
         </div>
-        <div className="w-full z-[3] absolute top-0 left-0 h-full bg-black/10 backdrop-blur-md grid grid-cols-2">
+        <div className="w-full z-[3] absolute top-0 left-0 h-full bg-black/10 backdrop-blur-md grid grid-cols-2 ">
           <div className="w-full h-full flex flex-col justify-center px-10 gap-4">
             {e?.logo !=null?(<div className="w-full h-[13vh] overflow-hidden">
               <ImageWithFallback width="500" height="500"
