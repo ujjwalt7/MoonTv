@@ -227,7 +227,7 @@ function WatchPage({ data }) {
         showInfo={showInfo}
         setshowInfo={setshowInfo}
         mediatype={mediatype}
-        season={season}
+        season={season} setSeason={setSeason}
         id={id}
       />
     </div>
