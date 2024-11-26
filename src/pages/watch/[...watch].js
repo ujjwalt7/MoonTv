@@ -56,17 +56,45 @@ function WatchPage({ data }) {
   const { toast } = useToast();
   const { user, setUser } = useUser();
   const [showInfo, setshowInfo] = useState(true);
+  
+  const serverIframeChanger = (val) => {
+    switch (val) {
+      case "1"||1:
+        return (
+          `https://embed.su/embed/${mediatype}/${id}${
+            mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
+            }`
+          );break;
+          case "2"||2:
+            return `https://player.autoembed.cc/embed/${ mediatype == "tv" ?"tv/"+id+"/"+season+"/"+episode:"movie/"+id}`;
+            break;
+            case "3"||3:
+              return `https://vidbinge.dev/embed/${ mediatype == "tv" ?"tv/"+id+"/"+season+"/"+episode:"movie/"+id}`;
+              break;
+              default:
+                return (
+                  `https://embed.su/embed/${mediatype}/${id}${
+                    mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
+                    }`
+                  );
+                }
+              };
+              const [server, setServer] = useState(serverIframeChanger("1"));
+
+
 
   return (
     <div className="w-full flex h-full  gap-2 overflow-x-hidden">
       {/* <div className="w-full flex h-full  gap-2"> */}
       <div className="w-full h-full relative  bg-bgDark overflow-x-hidden  overflow-hidden rounded-2xl transition-all duration-500">
-        {!showInfo&&<div
-          onClick={() => setshowInfo(true)}
-          className="w-[2%] text-4xl opacity-0 hover:opacity-100 flex justify-center items-center hover:w-[5%] transition-all duration-300 z-[5] bg-gradient-to-r hover:from-bgDark/20 hover:to-bg h-full fixed right-0 top-0"
-        >
-          <IoIosArrowForward />
-        </div>}
+        {!showInfo && (
+          <div
+            onClick={() => setshowInfo(true)}
+            className="w-[2%] text-4xl opacity-0 hover:opacity-100 flex justify-center items-center hover:w-[5%] transition-all duration-300 z-[5] bg-gradient-to-r hover:from-bgDark/20 hover:to-bg h-full fixed right-0 top-0"
+          >
+            <IoIosArrowForward />
+          </div>
+        )}
 
         <div className="w-full h-full relative overflow-y-auto overflow-x-hidden noscb">
           <div className="w-full h-[100%] absolute top-0 left-0 z-[0] rounded-2xl overflow-hidden">
@@ -91,9 +119,10 @@ function WatchPage({ data }) {
             <div className="w-full px-8 pt-4">
               <div className="w-full aspect-video rounded-2xl overflow-hidden bg-bgDark/30">
                 <iframe
-                  src={`https://embed.su/embed/${mediatype}/${id}${
-                    mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
-                  }`}
+                  // src={`https://embed.su/embed/${mediatype}/${id}${
+                  //   mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
+                  // }`}
+                  src={server}
                   className="w-full h-full"
                   allowFullScreen
                   onClick={() => {
@@ -111,7 +140,7 @@ function WatchPage({ data }) {
               </div>
             </div>
             <div className="w-full flex flex-col gap-2 px-8">
-              <div className="w-full px-2 flex justify-start items-center">
+              <div className="w-full px-2 flex justify-between items-center">
                 <div className="w-full flex gap-2 items-center text-textWhite">
                   <div className="text-xl font-medium">
                     {data?.results?.title ||
@@ -123,6 +152,24 @@ function WatchPage({ data }) {
                   {data?.results?.tagline !== "" && (
                     <div className="text-sm">- {data?.results?.tagline}</div>
                   )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-sm">Server:</div>
+                  <Select
+                    onValueChange={(e) => {
+                      setServer(serverIframeChanger(e))
+                    }}
+                    defaultValue="1"
+                  >
+                    <SelectTrigger className="w-full border-none bg-bgDark2 text-textWhite">
+                      <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-bgDark2/50 backdrop-blur-xl text-textWhite outline-none border-none ">
+                      <SelectItem value="1">Primary</SelectItem>
+                      <SelectItem value="2">Secondary</SelectItem>
+                      <SelectItem value="3">Backup</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -227,7 +274,8 @@ function WatchPage({ data }) {
         showInfo={showInfo}
         setshowInfo={setshowInfo}
         mediatype={mediatype}
-        season={season} setSeason={setSeason}
+        season={season}
+        setSeason={setSeason}
         id={id}
       />
     </div>
