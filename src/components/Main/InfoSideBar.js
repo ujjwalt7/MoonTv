@@ -60,8 +60,8 @@ export function InfoSideBar({
                 <SelectContent className="bg-bgDark2/50 backdrop-blur-xl text-textWhite outline-none border-none ">
                   {data?.results?.seasons?.map(
                     (e, i) =>
-                      (parseInt(e?.air_date.substring(0, 4)) <=
-                        today.getFullYear())&&(parseInt(e?.air_date.substring(5,7)) <= parseInt(String(today.getMonth() + 1).padStart(2, '0'))) && (
+                      (parseInt(e?.air_date?.substring(0, 4)) <=
+                        today.getFullYear())&&(parseInt(e?.air_date?.substring(5,7)) <= parseInt(String(today.getMonth() + 1).padStart(2, '0'))) && (
                         <Link
                           className="w-full"
                           key={"seasonSelect" + i}
@@ -80,8 +80,8 @@ export function InfoSideBar({
               <div className="w-full h-full grid grid-cols-2 gap-1">
                 {data?.results?.seasonInfo
                   ?.find((e) => e?.season_number == season)
-                  ?.episodes?.map((e, i) => (parseInt(e?.air_date.substring(0, 4)) <=
-                  today.getFullYear())&&(parseInt(e?.air_date.substring(5,7)) <= parseInt(String(today.getMonth() + 1).padStart(2, '0'))) &&(parseInt(e?.air_date.substring(8,10)) <= parseInt(String(today.getDate()).padStart(2, '0')))&&(
+                  ?.episodes?.map((e, i) => (parseInt(e?.air_date?.substring(0, 4)) <=
+                  today.getFullYear())&&(parseInt(e?.air_date?.substring(5,7)) <= parseInt(String(today.getMonth() + 1).padStart(2, '0'))) &&(parseInt(e?.air_date?.substring(8,10)) <= parseInt(String(today.getDate()).padStart(2, '0')))&&(
                     <Link
                       href={`/watch/${mediatype}/${id}/${season}/${e?.episode_number}`}
                       key={"season" + i}
