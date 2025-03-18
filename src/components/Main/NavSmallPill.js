@@ -19,7 +19,7 @@ function NavbarSmallPills({ Icon, link, HoverIcon }) {
   //   </Link>
   // );
   return (
-    <div asChild className="w-full hover:bg-bgDark flex justify-center py-1">
+    <div className="w-full hover:bg-bgDark flex justify-center py-1">
       <Link href={link} className="group/navpill relative text-[1.7rem] ">
         {/* <div className=""> */}
           <Icon className="opacity-100 group-hover/navpill:opacity-0" />

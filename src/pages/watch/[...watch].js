@@ -196,22 +196,22 @@ function WatchPage({ data }) {
                     {data?.results?.videos?.map((e, i) => (
                       <CarouselItem
                         key={e?.id + "_RelatedVideos"}
-                        className="basis-1/4 relative w-full flex flex-col"
+                        className="basis-1/4 relative w-full flex flex-col overflow-hidden "
                       >
-                        <div className="w-full absolute top-0 left-0 h-full bg-gradient-to-b from-bgDark/0  to-black  rounded-xl overflow-hidden flex justify-start items-end text-xs text-textWhite px-4 py-2">
-                          {e?.name}
-                        </div>
-                        <div className="w-full aspect-video rounded-xl bg-bgDark3 overflow-hidden">
+                        <div className="w-full aspect-video rounded-xl bg-bgDark3 overflow-hidden relative">
                           <ImageWithFallback
                             src={
                               tmdbBasicImg +
                               "/w300" +
                               data?.results?.backdrop_path
-                            }
+                            } className="w-full h-full object-cover"
                             width="300"
                             height="300"
                             alt="backdrop"
                           />
+                        <div className="w-full absolute top-0 left-0 h-full bg-gradient-to-b from-bgDark/0  to-black  rounded-xl overflow-hidden flex justify-start items-end text-xs text-textWhite px-4 py-2">
+                          {e?.name}
+                        </div>
                         </div>
                       </CarouselItem>
                     ))}

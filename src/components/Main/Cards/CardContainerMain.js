@@ -2,8 +2,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import CardofCarouselMainCard from "./CardofCarouselMainCard";
 import {useState,useEffect} from "react"
@@ -46,7 +44,7 @@ function CardContainerMain({ data ,title = "Trending Movies" }) {
             {data?.results ? data?.results?.results?.map((e, i) => (
               <CarouselItem
                 key={"CarouselCardMain" + i}
-                className="basis-52 pl-3 "
+                className="md:basis-52 basis-44 md:pl-3  pl-2 "
               >
                 <CardofCarouselMainCard data={e}/>
               </CarouselItem>
@@ -54,7 +52,7 @@ function CardContainerMain({ data ,title = "Trending Movies" }) {
               Array.apply(null, Array(10)).map((e,i)=>(
                 <CarouselItem
                 key={"CarouselCardMain" + i}
-                className="basis-52 pl-3 "
+                className="md:basis-52 basis-44 md:pl-3  pl-2 "
               >
                 <Skeleton className="w-full bg-bgDark2 aspect-[3/4] rounded-2xl"/>
               </CarouselItem>

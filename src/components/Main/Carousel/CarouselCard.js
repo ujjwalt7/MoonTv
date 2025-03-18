@@ -1,4 +1,4 @@
-import { addToWatchlistHandler, tmdbBasicImg, tmdbBasicImgOriginl } from "@/components/values";
+import { addToWatchlistHandler, tmdbBasicImg } from "@/components/values";
 import { IoIosAdd } from "react-icons/io";
 import { TiStarFullOutline } from "react-icons/ti";
 import { FaPlay } from "react-icons/fa";
@@ -12,7 +12,7 @@ function CarouselCard({ e }) {
   const { user,setUser } = useUser();
   return (
     <div className="w-full">
-      <div className=" w-full aspect-[10/3] rounded-3xl overflow-hidden blur-0 relative">
+      <div className=" w-full md:aspect-[10/3] aspect-[9/6] rounded-3xl overflow-hidden blur-0 relative">
         <div className="w-full h-full overflow-hidden z-[2]">
           <ImageWithFallback width="1280" height="720"
             src={tmdbBasicImg + "w1280" + e?.backdrop_path}
@@ -20,20 +20,20 @@ function CarouselCard({ e }) {
             alt=""
           />
         </div>
-        <div className="w-full z-[3] absolute top-0 left-0 h-full bg-black/10 backdrop-blur-md grid grid-cols-2 ">
-          <div className="w-full h-full flex flex-col justify-center px-10 gap-4">
-            {e?.logo !=null?(<div className="w-full h-[13vh] overflow-hidden">
+        <div className="w-full z-[3] absolute top-0 left-0 h-full md:bg-black/10 bg-gradient-to-b from-black/0 to-black  md:backdrop-blur-md grid md:grid-cols-2 grid-cols-1 ">
+          <div className="w-full h-full flex flex-col md:justify-center justify-end py-4 md:px-10 px-5 md:gap-4 gap-2">
+            {e?.logo !=null?(<div className="md:w-full w-2/3 md:h-[13vh] h-12 overflow-hidden flex justify-start items-center">
               <ImageWithFallback width="500" height="500"
                 src={tmdbBasicImg + "w500/" + e?.logo?.file_path}
-                className="object-contain overflow-hidden h-full "
+                className="object-contain overflow-hidden h-full w-fit "
                 alt=""
               />
             </div>):(
-              <div className="text-5xl text-textWhite font-medium">
+              <div className="md:text-5xl text-2xl text-textWhite font-medium">
                   {e?.title || e?.original_title||e?.name||e?.original_name}</div>
             )}
-            <div className="w-full flex flex-col gap-2">
-              <div className="w-full flex gap-5 text-textWhite items-center">
+            <div className="w-full flex flex-col md:gap-2 gap-1">
+              <div className="w-full flex gap-5 text-textWhite items-center text-xs md:text-[1rem]">
                 <div className="font-medium capitalize">{e?.media_type}</div>
                 <div className="font-medium capitalize">
                   {e?.release_date?.substring(0, 4) ||
@@ -46,12 +46,12 @@ function CarouselCard({ e }) {
                   {e?.vote_average?.toString()?.substring(0, 3)}
                 </div>
               </div>
-              <div className="w-full text-textWhite text-sm">
+              <div className="md:w-full w-4/5 md:text-textWhite text-textWhite/80 md:text-sm text-xs">
                 {e?.overview?.substring(0, 200) + "..."}
               </div>
-              <div className="w-full flex items-center gap-2">
+              <div className="w-full flex items-center gap-2 md:text-[1rem] text-xs">
                 <Link href={`${"/watch/"+e?.media_type+"/"+e?.id}`} className="px-4 py-3 rounded-full text-textWhite text-sm bg-white/10 font-medium flex items-center gap-3 backdrop-blur-xl">
-                  <div className="text-lg">
+                  <div className="md:text-lg text-sm">
                     <FaPlay />
                   </div>
                   Watch Now
@@ -62,7 +62,7 @@ function CarouselCard({ e }) {
               </div>
             </div>
           </div>
-          <div className="w-full flex justify-center items-center overflow-hidden">
+          <div className="w-full justify-center items-center overflow-hidden md:flex hidden">
             <div className="w-1/2">
               <ImageWithFallback width="780" height="500"
                 src={tmdbBasicImg + "w780" + e?.poster_path}

@@ -36,7 +36,7 @@ function CarouselMain({ data, setBgIndex }) {
       className="p-2"
       setApi={setApi}
     >
-      <CarouselContent className="p-2 rounded-2xl">
+      <CarouselContent className="md:p-2 rounded-2xl">
         {data ?data?.["results"]?.map((e, i) => (
           <CarouselItem key={"CarouselMain" + i}>
             <CarouselCard e={e} />
