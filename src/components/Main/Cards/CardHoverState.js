@@ -15,7 +15,7 @@ function CardHoverState({ data }) {
   };
     return (
         //w-[125%] h-fit  absolute -top-[5%] left-[103%] bg-bg/40 backdrop-blur-xl rounded-2xl group-hover:z-[4] z-[2]  group-hover:opacity-100 opacity-0 invisible group-hover:visible transition-[opacity] ease-in-out duration-700
-        <div className="w-full bg-bg/40 backdrop-blur-xl rounded-2xl overflow-hidden ">
+        <div className="w-full bg-bg/40 backdrop-blur-xl rounded-2xl overflow-hidden z-[10] ">
     {/* <div className=""> */}
       <div className="w-full h-full flex flex-col rounded-2xl overflow-hidden">
         <div className="w-full h-full flex flex-col gap-1">

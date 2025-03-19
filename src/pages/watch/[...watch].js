@@ -7,6 +7,7 @@ import {
 } from "@/components/values";
 import { GrFavorite } from "react-icons/gr";
 import { useRouter } from "next/router";
+import { ANIME, MOVIES } from "@consumet/extensions";
 import {
   Carousel,
   CarouselContent,
@@ -36,6 +37,9 @@ export const getServerSideProps = async (context) => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/getbyid?type=${mediatype}&id=${id}`
     );
     const data = await datares.json();
+
+    // const ms = movies.
+
     return { props: { data } };
   } catch (error) {
     console.error("Fetch error:", error);
@@ -49,39 +53,61 @@ function WatchPage({ data }) {
   const getDefSeason = router.query?.watch?.[2] || 1;
   const mediatype = router.query.watch[0];
   const [season, setSeason] = useState(router.query?.watch?.[2] || 1);
-  const episode = router.query?.watch?.[3] || 1;
+  const [episode,setEpisode] = useState(router.query?.watch?.[3] || 1);
   const id = router.query.watch[1];
   const bgImgBlur = data?.results?.backdrop_path;
 
   const { toast } = useToast();
   const { user, setUser } = useUser();
   const [showInfo, setshowInfo] = useState(true);
-  
-  const serverIframeChanger = (val) => {
+  const [selectedServer, setSelectedServer] = useState("0");
+
+  // useEffect(() => {
+  //   setServer(serverIframeChanger(selectedServer));
+  // }, [id, season, episode,selectedServer]);
+  useEffect(() => {
+    setSeason(router.query?.watch?.[2] || 1);
+    setEpisode(router.query?.watch?.[3] || 1);
+  }, [router.query?.watch]);
+  useEffect(() => {
+    setServer(serverIframeChanger(selectedServer, season, episode));
+  }, [selectedServer, season, episode]);
+
+  const serverIframeChanger = (val,currentSeason = season,currentEpisode = episode) => {
     switch (val) {
-      case "1"||1:
-        return (
-          `https://embed.su/embed/${mediatype}/${id}${
-            mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
-            }`
-          );break;
-          case "2"||2:
-            return `https://player.autoembed.cc/embed/${ mediatype == "tv" ?"tv/"+id+"/"+season+"/"+episode:"movie/"+id}`;
-            break;
-            case "3"||3:
-              return `https://vidbinge.dev/embed/${ mediatype == "tv" ?"tv/"+id+"/"+season+"/"+episode:"movie/"+id}`;
-              break;
-              default:
-                return (
-                  `https://embed.su/embed/${mediatype}/${id}${
-                    mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
-                    }`
-                  );
-                }
-              };
-              const [server, setServer] = useState(serverIframeChanger("1"));
-
-
+      case "0" || 0:
+        return `https://player.videasy.net/${
+          mediatype == "tv"
+            ? "tv/" + id + "/" + currentSeason + "/" + currentEpisode
+            : "movie/" + id
+        }`;
+        break;
+      case "1" || 1:
+        return `https://embed.su/embed/${mediatype}/${id}${
+          mediatype == "tv" ? `/${currentSeason}/${currentEpisode}` : ""
+        }`;
+        break;
+      case "2" || 2:
+        return `https://player.autoembed.cc/embed/${
+          mediatype == "tv"
+            ? "tv/" + id + "/" + currentSeason + "/" + currentEpisode
+            : "movie/" + id
+        }`;
+        break;
+      case "3" || 3:
+        return `https://vidbinge.dev/embed/${
+          mediatype == "tv"
+            ? "tv/" + id + "/" + currentSeason + "/" + currentEpisode
+            : "movie/" + id
+        }`;
+        break;
+      default:
+        return `https://embed.su/embed/${mediatype}/${id}${
+          mediatype == "tv" ? `/${currentSeason}/${currentEpisode}` : ""
+        }`;
+    }
+  };
+  const [server, setServer] = useState(serverIframeChanger("0"));
 
   return (
     <div className="w-full flex h-full  gap-2 overflow-x-hidden">
@@ -125,6 +151,7 @@ function WatchPage({ data }) {
                   src={server}
                   className="w-full h-full"
                   allowFullScreen
+                  key={`${id}-${season}-${episode}`}
                   onClick={() => {
                     console.log("Played");
                     addToWatchHistoryHandler({
@@ -156,15 +183,14 @@ function WatchPage({ data }) {
                 <div className="flex items-center gap-2">
                   <div className="text-sm">Server:</div>
                   <Select
-                    onValueChange={(e) => {
-                      setServer(serverIframeChanger(e))
-                    }}
-                    defaultValue="1"
+                     onValueChange={(e) => setSelectedServer(e)}
+                    defaultValue="0"
                   >
                     <SelectTrigger className="w-full border-none bg-bgDark2 text-textWhite">
                       <SelectValue placeholder="Theme" />
                     </SelectTrigger>
                     <SelectContent className="bg-bgDark2/50 backdrop-blur-xl text-textWhite outline-none border-none ">
+                      <SelectItem value="0">Default</SelectItem>
                       <SelectItem value="1">Primary</SelectItem>
                       <SelectItem value="2">Secondary</SelectItem>
                       <SelectItem value="3">Backup</SelectItem>
@@ -204,14 +230,15 @@ function WatchPage({ data }) {
                               tmdbBasicImg +
                               "/w300" +
                               data?.results?.backdrop_path
-                            } className="w-full h-full object-cover"
+                            }
+                            className="w-full h-full object-cover"
                             width="300"
                             height="300"
                             alt="backdrop"
                           />
-                        <div className="w-full absolute top-0 left-0 h-full bg-gradient-to-b from-bgDark/0  to-black  rounded-xl overflow-hidden flex justify-start items-end text-xs text-textWhite px-4 py-2">
-                          {e?.name}
-                        </div>
+                          <div className="w-full absolute top-0 left-0 h-full bg-gradient-to-b from-bgDark/0  to-black  rounded-xl overflow-hidden flex justify-start items-end text-xs text-textWhite px-4 py-2">
+                            {e?.name}
+                          </div>
                         </div>
                       </CarouselItem>
                     ))}

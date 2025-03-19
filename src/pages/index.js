@@ -1,11 +1,14 @@
 import ImageWithFallback from "@/components/ImageFallback";
+import TopMoviesShowcase from "@/components/Main/Additional/TopMovies";
 import CardContainerMain from "@/components/Main/Cards/CardContainerMain";
 import CarouselMain from "@/components/Main/Carousel/CarouselMain";
 import TopNav from "@/components/topNav";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ANIME } from "@consumet/extensions"
 import { tmdbBasicImg } from "@/components/values";
 import Image from "next/image";
 import { useState } from "react";
+import AnimeCardContainer from "@/components/Main/Cards/AnimeCardContainer";
 export const getServerSideProps  = async (context) => {
   try {
     const carouselres = await fetch(
@@ -27,8 +30,21 @@ export const getServerSideProps  = async (context) => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/airingtoday?type=movie`
     );
     const airingShowsData = await airingTodayShows.json();
+
+    const topratedMovies = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/toprated?type=movie`
+    );
+    const topratedMoviesData = await topratedMovies.json();
+
+    const topAnimeTv = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/toprated?type=movie`
+    );
+    const topAnimeTVData = await topAnimeTv.json();
+
+
+
     return {
-      props: { carouseldata, trendingmoviedata, trendingtvdata, airingShowsData }
+      props: { carouseldata, trendingmoviedata, trendingtvdata, airingShowsData,topratedMoviesData,topAnimeTVData }
     }
   }
   catch(error) {
@@ -41,7 +57,8 @@ export default function Home({
   carouseldata,
   trendingmoviedata,
   trendingtvdata,
-  airingShowsData
+  airingShowsData,
+  topratedMoviesData,topAnimeTVData
 }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [bgBlur, setBgBlur] = useState(
@@ -91,6 +108,8 @@ export default function Home({
               title="Trending TV Shows"
               data={trendingtvdata}
             />
+            <TopMoviesShowcase data={topratedMoviesData?.['results']?.['results']?.slice(0,9)}/>
+            {/* <AnimeCardContainer title="Anime" data={topAnimeTVData} /> */}
             <CardContainerMain title="Airing 🛫" data={airingShowsData} />
           </div>
         </div>
