@@ -2,6 +2,7 @@ import TopNav from "@/components/topNav";
 import { IoAddCircleOutline } from "react-icons/io5";
 import {
   addToWatchHistoryHandler,
+  addToWatchlistHandler,
   tags,
   tmdbBasicImg,
 } from "@/components/values";
@@ -30,6 +31,7 @@ import { useUser } from "@/context/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import { InfoSideBar } from "@/components/Main/InfoSideBar";
 import { Skeleton } from "@/components/ui/skeleton";
+import Head from 'next/head';
 export const getServerSideProps = async (context) => {
   try {
     const mediatype = context.query.watch[0] || "movie";
@@ -62,10 +64,30 @@ function WatchPage({ data }) {
   const { user, setUser } = useUser();
   const [showInfo, setshowInfo] = useState(true);
   const [selectedServer, setSelectedServer] = useState("0");
-
+  const handleAddToWatchHistory = () => {
+    addToWatchHistoryHandler({
+      user,
+      movieId: id,
+      mediaType: mediatype,
+      title: data?.results?.title || data?.results?.original_title || data?.results?.name || data?.results?.original_name,
+      posterUrl: tmdbBasicImg + "w300/" + data?.results?.poster_path,
+      setUser,
+      toast,
+    });
+  };
   // useEffect(() => {
   //   setServer(serverIframeChanger(selectedServer));
   // }, [id, season, episode,selectedServer]);
+  const handleAddToHistory = () => {
+    addToHistory(
+      user.id,
+      id,
+      mediatype,
+      data?.results?.title || data?.results?.original_title || data?.results?.name || data?.results?.original_name,
+      tmdbBasicImg + "w300/" + data?.results?.poster_path,
+      data // Assuming data contains the full media data
+    );
+  };
   useEffect(() => {
     setSeason(router?.query?.watch?.[2] || 1);
     setEpisode(router?.query?.watch?.[3] || 1);
@@ -117,7 +139,7 @@ function WatchPage({ data }) {
     }, 500); // minimum 0.25s
     return () => clearTimeout(timer);
   }, [data]);
-
+  
   if (loading) {
     // Skeleton replica
     return (
@@ -178,7 +200,14 @@ function WatchPage({ data }) {
       </div>
     );
   }
-  return (
+  return (<>
+    <Head>
+        <title>{((data?.results?.title ||
+                data?.results?.original_title ||
+                data?.results?.name ||
+                data?.results?.original_name)|| "Watch")+" - "+process.env.NEXT_PUBLIC_APP_NAME}</title>
+    </Head>
+
     <div className="w-full flex h-full  gap-2 overflow-x-hidden">
       {/* <div className="w-full flex h-full  gap-2"> */}
       <div className="w-full h-full relative  bg-bgDark overflow-x-hidden  overflow-hidden rounded-2xl transition-all duration-500">
@@ -214,24 +243,10 @@ function WatchPage({ data }) {
             <div className="w-full px-8 pt-4">
               <div className="w-full aspect-video rounded-2xl overflow-hidden bg-bgDark/30">
                 <iframe
-                  // src={`https://embed.su/embed/${mediatype}/${id}${
-                  //   mediatype == "tv" ? `/${getDefSeason}/${episode}` : ""
-                  // }`}
                   src={server}
-                  className="w-full h-full"
+                  className="w-full h-full rounded-2xl"
                   allowFullScreen
-                  key={`${id}-${season}-${episode}`}
-                  onClick={() => {
-                    console.log("Played");
-                    addToWatchHistoryHandler({
-                      user,
-                      movieId: data?.results?.id,
-                      mediaType: data?.results?.media_type,
-                      setUser,
-                      toast,
-                    });
-                  }}
-                  frameBorder="0"
+                  onClick={handleAddToWatchHistory} // Use the defined function here
                 ></iframe>
               </div>
             </div>
@@ -269,7 +284,14 @@ function WatchPage({ data }) {
               </div>
 
               <div className="w-full flex justify-end items-center">
-                <div className="flex items-center gap-1 bg-bgDark2 text-textSec rounded-lg px-3 py-2 text-sm">
+                <div className="flex items-center gap-1 bg-bgDark2 text-textSec rounded-lg px-3 py-2 text-sm" onClick={()=>{addToWatchlistHandler({
+                    user,
+                    movieId: id,
+                    movieType: mediatype,
+                    setUser,
+                    toast,
+                    mediaData: data?.results // Assuming data contains the full media data
+                  });}}>
                   <div className="text-2xl">
                     <IoAddCircleOutline />
                   </div>
@@ -375,8 +397,8 @@ function WatchPage({ data }) {
         id={id}
       />
     </div>
+  </>
   );
- 
 }
 
 export default WatchPage;

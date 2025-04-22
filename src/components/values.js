@@ -1,4 +1,5 @@
-import { addToWatchlist } from "@/lib/auth";
+import { addToWatchlist } from "@/lib/watchlist";
+import { addToWatchHistory } from "@/lib/history"; // Add this import
 import { ToastAction ,useToast } from "./ui/toast";
 import Link from "next/link";
 
@@ -39,7 +40,8 @@ export const addToWatchlistHandler = async ({
   movieId,
   movieType,
   setUser,
-  toast
+  toast,
+  mediaData // <-- add this parameter
 }) => {
   if (!user) {
     console.log("User not authenticated");
@@ -61,7 +63,8 @@ export const addToWatchlistHandler = async ({
     movieId,
     movieType,
     timestamp,
-    setUser
+    setUser,
+    mediaData // <-- pass the full data here
   );
 
   if (success) {

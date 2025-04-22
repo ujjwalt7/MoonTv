@@ -12,6 +12,7 @@ import AnimeCardContainer from "@/components/Main/Cards/AnimeCardContainer";
 import SearchCommandBox from "@/components/Main/Additional/SearchCommandBox";
 import LoadingScreen from "@/components/LoadingScreen";
 import { motion, AnimatePresence } from "framer-motion";
+import Head from 'next/head';
 export const getServerSideProps  = async (context) => {
   try {
     const carouselres = await fetch(
@@ -196,6 +197,9 @@ export default function Home({
 
   return (
     <>
+      <Head>
+        <title>{"Home - " + process.env.NEXT_PUBLIC_APP_NAME}</title>
+      </Head>
       {/* REMOVE SPLASH SCREEN CONDITIONAL RENDERING */}
       {/* {showSplash && (
         <SplashScreen

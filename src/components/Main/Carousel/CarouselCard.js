@@ -57,7 +57,14 @@ function CarouselCard({ e }) {
                   Watch Now
                 </Link>
                 <div className="p-2 cursor-pointer bg-white/10 text-textWhite backdrop-blur-xl text-2xl rounded-full overflow-hidden" onClick={()=>{
-                  addToWatchlistHandler({user,movieId: e?.id,movieType: e?.media_type,setUser,toast});
+                  addToWatchlistHandler({
+                    user,
+                    movieId: e?.id,
+                    movieType: e?.media_type,
+                    setUser,
+                    toast,
+                    mediaData: e // <-- pass the full JSON object here
+                  });
                 }}><IoIosAdd /></div>
               </div>
             </div>

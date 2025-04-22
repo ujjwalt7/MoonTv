@@ -42,3 +42,14 @@ export async function signUpWithEmail(email, password, setUser) {
     return { user: null, error: error.message };
   }
 }
+
+// Add this function for sign out
+export async function signOut() {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    return { error: error.message || "Unknown error during sign out" };
+  }
+}

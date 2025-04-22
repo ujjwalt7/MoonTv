@@ -6,21 +6,31 @@ import { HoverCardContent } from "@radix-ui/react-hover-card";
 import Image from "next/image";
 import { FaPlay } from "react-icons/fa6";
 import { IoIosAdd } from "react-icons/io";
+import Link from "next/link";
 
 function CardHoverState({ data }) {
-  const {toast} = useToast();
-  const { user,setUser } = useUser();
+  const { toast } = useToast();
+  const { user, setUser } = useUser();
   const handleButtonClick = (e) => {
-    e.stopPropagation(); addToWatchlistHandler({user,movieId: data?.id,movieType: data?.media_type,setUser,toast});
+    e.stopPropagation();
+    addToWatchlistHandler({
+      user,
+      movieId: data?.id,
+      movieType: data?.media_type,
+      setUser,
+      toast,
+      mediaData: data // Pass the full data object
+    });
   };
-    return (
-        //w-[125%] h-fit  absolute -top-[5%] left-[103%] bg-bg/40 backdrop-blur-xl rounded-2xl group-hover:z-[4] z-[2]  group-hover:opacity-100 opacity-0 invisible group-hover:visible transition-[opacity] ease-in-out duration-700
-        <div className="w-full bg-bg/40 backdrop-blur-xl rounded-2xl overflow-hidden z-[10] ">
-    {/* <div className=""> */}
+
+  return (
+    <div className="w-full bg-bg/40 backdrop-blur-xl rounded-2xl overflow-hidden z-[10] ">
       <div className="w-full h-full flex flex-col rounded-2xl overflow-hidden">
         <div className="w-full h-full flex flex-col gap-1">
           <div className="w-full h-[15vh]">
-            <ImageWithFallback width="300" height="500"
+            <ImageWithFallback
+              width="300"
+              height="500"
               src={tmdbBasicImg + "w780/" + data?.backdrop_path}
               className="w-full h-full object-cover "
               alt="BackDrop"
@@ -55,13 +65,13 @@ function CardHoverState({ data }) {
               </div>
             </div>
             <div className="w-full flex items-center gap-2">
-              <div className="w-full bg-white/20 text-textWhite rounded-xl px-4 gap-2 backdrop-blur-lg py-2 text-center items-center flex justify-center">
+              <Link href={`/watch/${data?.media_type}/${data?.id}`} className="w-full bg-white/20 text-textWhite rounded-xl px-4 gap-2 backdrop-blur-lg py-2 text-center items-center flex justify-center">
                 <div className="text-lg">
                   <FaPlay />
                 </div>
                 Watch Now
-              </div>
-              <div className="p-2 cursor-pointer text-2xl bg-white/20 text-textWhite rounded-full backdrop-blur-lg"  onClick={handleButtonClick}>
+              </Link>
+              <div className="p-2 cursor-pointer text-2xl bg-white/20 text-textWhite rounded-full backdrop-blur-lg" onClick={handleButtonClick}>
                 <IoIosAdd />
               </div>
             </div>
