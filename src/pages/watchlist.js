@@ -1,43 +1,98 @@
-import { useUser } from "@/context/UserContext";
-import { getSignedInUserData } from "@/lib/auth";
 import { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext";
+import { supabase } from "@/lib/supabase";
+import LibraryLayout from "@/components/Layout/LibraryLayout";
+import CardofCarouselMainCard from "@/components/Main/Cards/CardofCarouselMainCard";
+import { IoBookmarkOutline } from "react-icons/io5";
+import { Spinner } from "@/components/ui/spinner";
 
-function WatchList() {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+export default function WatchlistPage() {
+  const { user } = useUser();
+  const [watchlist, setWatchlist] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const { success, userData, error } = await getSignedInUserData();
-
-      if (success) {
-        setUser(userData);
-        console.log(userData);
-      } else {
-        setError(error);
+    async function fetchWatchlist() {
+      if (!user) {
+        setLoading(false);
+        return;
       }
-    };
 
-    fetchUserData();
-  }, []);
-  useEffect(() => {
-    console.log(user);
+      try {
+        const { data: watchlistData, error } = await supabase
+          .from('watch_later')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('added_at', { ascending: false });
+
+        if (error) throw error;
+
+        // Fetch media details for each watchlist item
+        const mediaDetails = await Promise.all(
+          watchlistData.map(async (item) => {
+            const res = await fetch(`/api/media/${item.media_type}/${item.media_id}`);
+            const data = await res.json();
+            return {
+              ...data,
+              media_type: item.media_type,
+              added_at: item.added_at
+            };
+          })
+        );
+
+        setWatchlist(mediaDetails);
+      } catch (error) {
+        console.error('Error fetching watchlist:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchWatchlist();
   }, [user]);
-  if (error) return <p>Error: {error}</p>;
-  if (!user) return <p>Loading...</p>;
+
+  if (loading) {
+    return (
+      <LibraryLayout title="My Watchlist">
+        <div className="flex justify-center items-center h-[50vh]">
+          <Spinner />
+        </div>
+      </LibraryLayout>
+    );
+  }
+
+  if (!user) {
+    return (
+      <LibraryLayout title="My Watchlist">
+        <div className="flex flex-col items-center justify-center py-20">
+          <IoBookmarkOutline className="w-16 h-16 text-gray-600 mb-4" />
+          <h2 className="text-xl text-gray-400">Please sign in to view your watchlist</h2>
+        </div>
+      </LibraryLayout>
+    );
+  }
+
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="w-full text-7xl font-medium text-textWhite  px-8 pt-8">
-        Watchlist
-      </div>
-      <div className="w-full px-12 py-4">
-        <div className="w-full h-1 rounded-full bg-bgDark"></div>
-      </div>
-      <div className="w-full grid grid-cols-4 px-6 py-2">
-        <div className="w-full aspect-video rounded-xl bg-bgDark"></div>
-      </div>
-    </div>
+    <LibraryLayout title="My Watchlist">
+      {watchlist.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+          {watchlist.map((item) => (
+            <CardofCarouselMainCard
+              key={`${item.id}-${item.media_type}`}
+              data={item}
+              showWatchlistButton={true}
+              onWatchlistUpdate={() => {
+                setWatchlist(prev => prev.filter(i => i.id !== item.id));
+              }}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20">
+          <IoBookmarkOutline className="w-16 h-16 text-gray-600 mb-4" />
+          <h2 className="text-xl text-gray-400">Your watchlist is empty</h2>
+        </div>
+      )}
+    </LibraryLayout>
   );
 }
-
-export default WatchList;

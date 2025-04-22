@@ -29,6 +29,7 @@ import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import { InfoSideBar } from "@/components/Main/InfoSideBar";
+import { Skeleton } from "@/components/ui/skeleton";
 export const getServerSideProps = async (context) => {
   try {
     const mediatype = context.query.watch[0] || "movie";
@@ -50,11 +51,11 @@ export const getServerSideProps = async (context) => {
 function WatchPage({ data }) {
   const [capi, setCarouselApi] = useState();
   const router = useRouter();
-  const getDefSeason = router.query?.watch?.[2] || 1;
-  const mediatype = router.query.watch[0];
-  const [season, setSeason] = useState(router.query?.watch?.[2] || 1);
-  const [episode,setEpisode] = useState(router.query?.watch?.[3] || 1);
-  const id = router.query.watch[1];
+  const getDefSeason = router?.query?.watch?.[2] || 1;
+  const mediatype = router?.query?.watch?.[0];
+  const [season, setSeason] = useState(router?.query?.watch?.[2] || 1);
+  const [episode,setEpisode] = useState(router?.query?.watch?.[3] || 1);
+  const id = router?.query?.watch?.[1];
   const bgImgBlur = data?.results?.backdrop_path;
 
   const { toast } = useToast();
@@ -66,9 +67,9 @@ function WatchPage({ data }) {
   //   setServer(serverIframeChanger(selectedServer));
   // }, [id, season, episode,selectedServer]);
   useEffect(() => {
-    setSeason(router.query?.watch?.[2] || 1);
-    setEpisode(router.query?.watch?.[3] || 1);
-  }, [router.query?.watch]);
+    setSeason(router?.query?.watch?.[2] || 1);
+    setEpisode(router?.query?.watch?.[3] || 1);
+  }, [router?.query?.watch]);
   useEffect(() => {
     setServer(serverIframeChanger(selectedServer, season, episode));
   }, [selectedServer, season, episode]);
@@ -108,7 +109,75 @@ function WatchPage({ data }) {
     }
   };
   const [server, setServer] = useState(serverIframeChanger("0"));
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500); // minimum 0.25s
+    return () => clearTimeout(timer);
+  }, [data]);
+
+  if (loading) {
+    // Skeleton replica
+    return (
+      <div className="w-full flex h-full gap-2 overflow-x-hidden">
+        <div className="w-full h-full relative bg-bgDark overflow-x-hidden overflow-hidden rounded-2xl transition-all duration-500">
+          <div className="w-full h-full relative overflow-y-auto overflow-x-hidden noscb">
+            <div className="w-full h-[100%] absolute top-0 left-0 z-[0] rounded-2xl overflow-hidden">
+              <Skeleton className="w-full h-[50vh] bg-bgDark3 blur-3xl" />
+            </div>
+            <div className="w-full flex flex-col gap-4 blur-0" id="scroll">
+              <Skeleton className="h-12 w-1/3 mx-8 my-6 rounded-lg" />
+              <div className="w-full px-8 pt-4">
+                <Skeleton className="w-full aspect-video rounded-2xl bg-bgDark/30" />
+              </div>
+              <div className="w-full flex flex-col gap-2 px-8">
+                <div className="w-full px-2 flex justify-between items-center">
+                  <div className="w-full flex gap-2 items-center">
+                    <Skeleton className="h-8 w-48 rounded-lg" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-8 w-24 rounded-lg" />
+                  </div>
+                </div>
+                <div className="w-full flex justify-end items-center">
+                  <Skeleton className="h-10 w-40 rounded-lg" />
+                </div>
+                <div className="w-full flex flex-col gap-2 pt-4">
+                  <Skeleton className="h-8 w-32 rounded-lg" />
+                  <div className="w-full grid grid-cols-4 gap-2">
+                    {[...Array(4)].map((_, i) => (
+                      <Skeleton key={i} className="aspect-video rounded-xl" />
+                    ))}
+                  </div>
+                </div>
+                <div className="w-full flex flex-col gap-2 pt-8">
+                  <div className="w-full flex justify-between items-center">
+                    <Skeleton className="h-8 w-32 rounded-lg" />
+                    <div className="flex w-fit gap-2">
+                      <Skeleton className="h-8 w-8 rounded-lg" />
+                      <Skeleton className="h-8 w-2 rounded-lg" />
+                      <Skeleton className="h-8 w-8 rounded-lg" />
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2 py-6 pb-20">
+                    {[...Array(5)].map((_, i) => (
+                      <Skeleton key={i} className="basis-52 h-72 rounded-xl" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Sidebar skeleton */}
+        <div className="hidden md:block w-96 h-full bg-bgDark2 rounded-2xl ml-2">
+          <Skeleton className="w-full h-full rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="w-full flex h-full  gap-2 overflow-x-hidden">
       {/* <div className="w-full flex h-full  gap-2"> */}
@@ -307,6 +376,7 @@ function WatchPage({ data }) {
       />
     </div>
   );
+ 
 }
 
 export default WatchPage;

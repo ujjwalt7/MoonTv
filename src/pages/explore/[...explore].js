@@ -10,9 +10,10 @@ import CardofCarouselMainCard from "@/components/Main/Cards/CardofCarouselMainCa
 import Link from "next/link";
 import Image from "next/image";
 import ImageWithFallback from "@/components/ImageFallback";
+import { FitlerDropDown } from "@/components/Main/Additional/FilterDropDown";
 export const getServerSideProps = async (context) => {
-  try{const mediatype = context.query.explore[0] || "movie";
-  const pageno = context.query.explore[1] || "1";
+  try{const mediatype = context.query?.explore?.[0] || "movie";
+  const pageno = context.query?.explore?.[1] || "1";
   const trendingmovieres = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/popular?type=${mediatype}&page=${pageno}`
   );
@@ -29,8 +30,8 @@ function ExplorePage({ trendingmoviedata }) {
     trendingmoviedata?.results?.results?.[0]?.backdrop_path
   );
   const router = useRouter();
-  const mediatype = router.query.explore[0];
-  const page = Number(router.query.explore[1]) || 1;
+  const mediatype = router?.query?.explore?.[0];
+  const page = Number(router?.query?.explore?.[1]) || 1;
 
   // const OnHoverFn = (data) => {
   //   setbgImgBlur(data?.backdrop_path);
@@ -44,7 +45,7 @@ function ExplorePage({ trendingmoviedata }) {
     }, 300); // Adjust timeout for a smoother effect if needed
   };
   const onInputChangeHandle = (val) => {
-    router.replace(`/search/${val}`);
+    router?.replace(`/search/${val}`);
   };
 
   return (
@@ -80,9 +81,10 @@ function ExplorePage({ trendingmoviedata }) {
               />
             </div>
           </div>
-          <div className="rounded-lg p-3 text-xl bg-black/30 backdrop-blur-md text-[#ccc]">
-            <FaFilter />
-          </div>
+          {/* <div className="rounded-lg p-3 text-xl bg-black/30 backdrop-blur-md text-[#ccc]"> */}
+            {/* <FaFilter /> */}
+            <FitlerDropDown />
+          {/* </div> */}
         </div>
         <div className="w-full flex justify-between items-center px-6">
           <div className="flex">

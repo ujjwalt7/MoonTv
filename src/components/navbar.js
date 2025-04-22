@@ -15,9 +15,14 @@ import { GoHomeFill } from "react-icons/go";
 import { TbPlayerTrackNext } from "react-icons/tb";
 import { GoClock } from "react-icons/go";
 import { FaUser } from "react-icons/fa";
+import { useState } from "react"; // Make sure this is imported
+import { LoginModal } from "./LoginModal";
+
 function Navbar() {
+  const [loginOpen, setLoginOpen] = useState(false);
+
   return (
-    <div className="w-full h-full  flex flex-col overflow-hidden gap-2">
+    <div className="w-full h-full flex flex-col overflow-hidden gap-2">
       <div className="w-full flex flex-col rounded-2xl bg-bgDark p-2 gap-2">
         <NavbarPills
           link={"/"}
@@ -46,30 +51,31 @@ function Navbar() {
             title={"TV Shows"}
             HoverIcon={BsTv}
           />
-          {/* <NavbarPills Icon={GiDramaMasks} title={"K Drama"} /> */}
-          {/* <NavbarPills Icon={GiSamuraiHelmet} title={"Anime"} /> */}
         </div>
         <div className="w-full flex flex-col gap-2">
           <NavbarPills
+            link={"/history"}
             Icon={GoClockFill}
             title={"History"}
             HoverIcon={GoClock}
           />
           <NavbarPills
-          
-          link={"/watchlist"}
+            link={"/watchlist"}
             Icon={FaHeart}
             title={"WatchList"}
             HoverIcon={FaRegHeart}
           />
-          <NavbarPills
-            link={"/login"}
-            HoverIcon={FaRegUser}
-            Icon={FaUser}
-            title={"Login"}
-          />
+          {/* Replace the Login pill with a button that opens the modal */}
+          <div
+            onClick={() => setLoginOpen(true)}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-textSec hover:bg-bgDark2 cursor-pointer"
+          >
+            <span className="text-2xl"><FaUser /></span>
+            <span>Login</span>
+          </div>
         </div>
       </div>
+      <LoginModal open={loginOpen} setOpen={setLoginOpen} />
     </div>
   );
 }

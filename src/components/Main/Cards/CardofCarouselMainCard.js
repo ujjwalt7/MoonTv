@@ -6,31 +6,30 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";import { useEffect, useState } from "react";
-import Image from "next/image";
+} from "@/components/ui/hover-card";
 import ImageWithFallback from "@/components/ImageFallback";
-function CardofCarouselMainCard({ data, hoverFn, mediatype = "movie" }) {  const [mounted, setMounted] = useState(false);
+import React from "react";
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+export default React.memo(function CardofCarouselMainCard({ data, hoverFn, mediatype = "movie" }) {
   if (!data) return null; // Ensure data exists
 
   return (
     <Link
       href={`/watch/${data?.media_type || mediatype}/${data?.id}`}
-      className="w-full  aspect-[3/4] rounded-2xl relative group"
+      className="w-full aspect-[3/4] rounded-2xl relative group"
       onMouseEnter={() => {
         if (hoverFn) {
           hoverFn(data);
         }
       }}
     >
-      {mounted && (<HoverCard>
+      <HoverCard>
         <HoverCardTrigger>
           <div className="w-full h-full z-[3] overflow-hidden rounded-2xl group-hover:scale-[1.02] transition-all duration-200 ease-linear">
-            <ImageWithFallback key={data?.poster_path} width="500" height="500"
+            <ImageWithFallback
+              key={data?.poster_path}
+              width="500"
+              height="500"
               src={tmdbBasicImg + "w500/" + data?.poster_path}
               alt=""
               className="w-full h-full object-cover"
@@ -43,13 +42,11 @@ function CardofCarouselMainCard({ data, hoverFn, mediatype = "movie" }) {  const
             {data?.vote_average?.toString()?.substring(0, 3)}
           </div>
         </HoverCardTrigger>
-        <HoverCardContent side="right" className="p-0 bg-transparent border-none z-20" >
-          <CardHoverState data={data||null}  />
-          {/* Hey Im hovered */}
+        <HoverCardContent side="right" className="p-0 bg-transparent border-none z-20">
+          <CardHoverState data={data || null} />
         </HoverCardContent>
-      </HoverCard>)}
+      </HoverCard>
     </Link>
   );
-}
+});
 
-export default CardofCarouselMainCard;

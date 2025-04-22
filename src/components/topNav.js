@@ -118,7 +118,7 @@ function TopNav({ title }) {
                 description: "Please wait while we redirect to new Page and login",
                 // variant: "destructive",
               });
-              router.push('/login')
+              router?.push('/login')
           }
             }} className="p-2 pr-3 text-2xl text-textWhite gap-2 rounded-full bg-white/20 backdrop-blur-lg flex justify-center items-center">
               {user?<BiLogOut />:<FaUserAstronaut className="text-2xl p-1 pr-0" />}{user?<div className="text-sm">Logout</div>:<div className="text-sm">Login</div>}

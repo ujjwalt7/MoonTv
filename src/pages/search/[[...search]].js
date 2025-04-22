@@ -59,7 +59,7 @@ function SearchPage({ tempData }) {
 
   const onInputChangeHandle = (val) => {
     setsq(val);
-    router.replace(`/search/${val}`);
+    router?.replace(`/search/${val}`);
   };
   // router?.query?.search[0] = "new";
   return (

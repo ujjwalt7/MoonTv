@@ -39,7 +39,7 @@ const items = [
 const bottomItems = [
   {
     title: "History",
-    url: "/",
+    url: "/history",
     icon: GoClock,
     hovweIcon: GoClockFill,
   },
